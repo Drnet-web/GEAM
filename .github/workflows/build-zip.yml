@@ -1,0 +1,32 @@
+name: Build and Upload GEAM Update ZIP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-zip:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Remove database file and temp files
+        run: |
+          rm -f instance/geam.sqlite
+          rm -rf update_cache __pycache__ .git
+
+      - name: Create ZIP of the project
+        run: |
+          zip -r geam_update.zip . -x '*.git*' -x 'instance/geam.sqlite' -x 'update_cache/*' -x '__pycache__/*' -x '*.log'
+
+      - name: Upload ZIP as release asset
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v-auto-${{ github.run_number }}
+          name: GEAM Auto Update ${{ github.run_number }}
+          files: geam_update.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
