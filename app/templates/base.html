@@ -180,6 +180,11 @@
 								<i class="fas fa-cog"></i> <span class="d-none d-lg-inline">Impostazioni</span>
 							</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link {% if request.endpoint and request.endpoint.startswith('aggiornamenti.') %}active{% endif %}" href="{{ url_for('aggiornamenti.index') }}" title="Aggiornamenti">
+								<i class="fas fa-wrench"></i> <span class="d-none d-lg-inline">Aggiornamenti</span>
+							</a>
+						</li>
                     </ul>
                 </div>
             </nav>

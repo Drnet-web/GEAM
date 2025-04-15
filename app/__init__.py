@@ -61,7 +61,8 @@ def create_app(config=None):
     from app.views.impostazioni import impostazioni_bp
     from app.views.report import report_bp  # Aggiungi questa riga
     from app.views.fornitori import fornitori_bp
-   
+    from app.views.aggiornamenti import aggiornamenti_bp
+
     
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(clienti_bp)
@@ -69,6 +70,8 @@ def create_app(config=None):
     app.register_blueprint(impostazioni_bp)
     app.register_blueprint(report_bp)
     app.register_blueprint(fornitori_bp)
+    app.register_blueprint(aggiornamenti_bp)
+   
     
     # Configurazione del logging
     if not app.debug:
