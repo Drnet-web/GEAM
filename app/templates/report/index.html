@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+
+{% block title %}GEAM - Report{% endblock %}
+
+{% block page_title %}Report e Statistiche{% endblock %}
+
+{% block page_actions %}
+<!-- Il pulsante Esporta PDF è stato rimosso -->
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <ul class="nav nav-pills mb-3" id="report-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="dashboard-tab" data-bs-toggle="pill" data-bs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="true">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="estintori-tab" data-bs-toggle="pill" data-bs-target="#estintori" type="button" role="tab" aria-controls="estintori" aria-selected="false">
+                <i class="fas fa-fire-extinguisher"></i> Estintori
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="clienti-tab" data-bs-toggle="pill" data-bs-target="#clienti" type="button" role="tab" aria-controls="clienti" aria-selected="false">
+                <i class="fas fa-building"></i> Clienti
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="scadenze-tab" data-bs-toggle="pill" data-bs-target="#scadenze" type="button" role="tab" aria-controls="scadenze" aria-selected="false">
+                <i class="fas fa-calendar-alt"></i> Scadenze
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content report-tab-content" id="report-tabs-content">
+        <!-- Tab Dashboard -->
+        <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-chart-pie card-icon"></i>
+                            <h5 class="card-title mb-0">Distribuzione Tipologie Estintori</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-estintori-tipologia"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-chart-bar card-icon"></i>
+                            <h5 class="card-title mb-0">Estintori per Zona</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-estintori-zona"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Estintori -->
+        <div class="tab-pane fade" id="estintori" role="tabpanel" aria-labelledby="estintori-tab">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-chart-pie card-icon"></i>
+                            <h5 class="card-title mb-0">Distribuzione per Tipologia</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-estintori-tipologia-detail"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-chart-pie card-icon"></i>
+                            <h5 class="card-title mb-0">Distribuzione per Stato</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-estintori-stato"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-chart-bar card-icon"></i>
+                            <h5 class="card-title mb-0">Distribuzione per Capacità</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-capacita"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-map-marker-alt card-icon"></i>
+                            <h5 class="card-title mb-0">Distribuzione per Zona</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-estintori-zona-detail"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Clienti -->
+        <div class="tab-pane fade" id="clienti" role="tabpanel" aria-labelledby="clienti-tab">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-map-marker-alt card-icon"></i>
+                            <h5 class="card-title mb-0">Clienti per Zona</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-clienti-zona"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-city card-icon"></i>
+                            <h5 class="card-title mb-0">Clienti per Comune</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-clienti-comune"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-industry card-icon"></i>
+                            <h5 class="card-title mb-0">Clienti per Tipologia</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-clienti-tipologia"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Scadenze -->
+        <div class="tab-pane fade" id="scadenze" role="tabpanel" aria-labelledby="scadenze-tab">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-calendar-day card-icon"></i>
+                            <h5 class="card-title mb-0">Scadenze Prossime</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-scadenze-prossime"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card chart-card">
+                        <div class="card-header d-flex align-items-center">
+                            <i class="fas fa-check-circle card-icon"></i>
+                            <h5 class="card-title mb-0">Stato delle Scadenze</h5>
+                        </div>
+                        <div class="card-body chart-container" style="height: 300px;">
+                            <canvas id="chart-stato-scadenze"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const chartColors = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#f8f9fc', '#858796', '#5a5c69'];
+    async function fetchData(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error(`Errore nel caricamento dei dati da ${url}:`, error);
+            return [];
+        }
+    }
+    function createChart(id, type, data, title = '', horizontal = false) {
+        const ctx = document.getElementById(id)?.getContext('2d');
+        if (!ctx) return;
+        if (window.charts?.[id]) window.charts[id].destroy();
+        const labels = data.map(d => d.name);
+        const values = data.map(d => d.value);
+        const chart = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: title,
+                    data: values,
+                    backgroundColor: chartColors.slice(0, data.length),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: horizontal ? 'y' : 'x',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: type === 'pie' },
+                    title: { display: !!title, text: title },
+                    tooltip: {
+                        callbacks: type === 'pie' ? {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        } : {}
+                    }
+                }
+            }
+        });
+        window.charts = window.charts || {};
+        window.charts[id] = chart;
+    }
+
+    // Dashboard
+    fetchData('/report/api/estintori-tipologia').then(data => createChart('chart-estintori-tipologia', 'pie', data));
+    fetchData('/report/api/estintori-zona').then(data => createChart('chart-estintori-zona', 'bar', data));
+
+    // Estintori
+    fetchData('/report/api/estintori-tipologia').then(data => createChart('chart-estintori-tipologia-detail', 'pie', data));
+    fetchData('/report/api/estintori-stato').then(data => createChart('chart-estintori-stato', 'pie', data));
+    fetchData('/report/api/distribuzione-capacita').then(data => createChart('chart-capacita', 'bar', data));
+    fetchData('/report/api/estintori-zona').then(data => createChart('chart-estintori-zona-detail', 'bar', data));
+
+    // Clienti
+    fetchData('/report/api/clienti-zona').then(data => createChart('chart-clienti-zona', 'bar', data));
+    fetchData('/report/api/clienti-comune').then(data => createChart('chart-clienti-comune', 'bar', data));
+    fetchData('/report/api/clienti-tipologia').then(data => createChart('chart-clienti-tipologia', 'pie', data));
+
+    // Scadenze
+    fetchData('/report/api/scadenze-prossime').then(data => createChart('chart-scadenze-prossime', 'bar', data));
+    fetchData('/report/api/stato-scadenze').then(data => createChart('chart-stato-scadenze', 'pie', data));
+});
+</script>
+{% endblock %}

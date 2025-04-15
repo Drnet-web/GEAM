@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Report Generato - GEAM{% endblock %}
+
+{% block page_title %}Report Generato{% endblock %}
+
+{% block page_actions %}
+<button onclick="window.print()" class="btn btn-primary">
+  <i class="fas fa-print"></i> Stampa
+</button>
+<button onclick="window.close()" class="btn btn-secondary">
+  <i class="fas fa-times"></i> Chiudi
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+  <div class="card-header">
+    <i class="fas fa-file-alt me-1"></i>
+    Dettagli Report
+  </div>
+  <div class="card-body">
+    <div class="row mb-3">
+      <div class="col-md-3 fw-bold">Tipo Report:</div>
+      <div class="col-md-9">{{ tipo|capitalize }}</div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-3 fw-bold">Formato:</div>
+      <div class="col-md-9">{{ formato|upper }}</div>
+    </div>
+    {% if cliente_id %}
+    <div class="row mb-3">
+      <div class="col-md-3 fw-bold">Cliente:</div>
+      <div class="col-md-9">
+        {% set cliente = get_cliente(cliente_id) %}
+        {{ cliente.azienda if cliente else 'Non specificato' }}
+      </div>
+    </div>
+    {% endif %}
+    {% if tipologia %}
+    <div class="row mb-3">
+      <div class="col-md-3 fw-bold">Tipologia:</div>
+      <div class="col-md-9">{{ tipologia }}</div>
+    </div>
+    {% endif %}
+    {% if periodo %}
+    <div class="row mb-3">
+      <div class="col-md-3 fw-bold">Periodo:</div>
+      <div class="col-md-9">
+        {% if periodo == 'scaduti' %}
+          Estintori scaduti
+        {% elif periodo == 'prossimi30' %}
+          Prossimi 30 giorni
+        {% elif periodo == 'prossimi60' %}
+          Prossimi 60 giorni
+        {% elif periodo == 'prossimi90' %}
+          Prossimi 90 giorni
+        {% else %}
+          {{ periodo }}
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="alert alert-info">
+  <i class="fas fa-info-circle me-2"></i>
+  Questa è una pagina dimostrativa per il report. In futuro, qui verrà generato il report effettivo in base ai parametri selezionati.
+</div>
+
+{% endblock %}

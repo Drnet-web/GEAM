@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}QR Code Estintore {{ estintore.matricola }} - GEAM{% endblock %}
+
+{% block page_title %}QR Code Estintore: {{ estintore.tipologia }} - {{ estintore.matricola }}{% endblock %}
+
+{% block page_actions %}
+<div class="btn-group">
+  <a href="{{ url_for('estintori.visualizza', id=estintore.id) }}" class="btn btn-secondary">
+    <i class="fas fa-arrow-left"></i> Torna ai dettagli
+  </a>
+  <button onclick="window.print()" class="btn btn-primary">
+    <i class="fas fa-print"></i> Stampa QR Code
+  </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-6 mx-auto">
+    <div class="card mb-4">
+      <div class="card-header">
+        <i class="fas fa-qrcode me-1"></i>
+        QR Code per l'estintore
+      </div>
+      <div class="card-body text-center">
+        <div id="qrcode" class="d-flex justify-content-center mb-3"></div>
+        
+        <div class="mt-4">
+          <h5>{{ estintore.matricola }}</h5>
+          <p>{{ estintore.tipologia }} {{ estintore.capacita }}</p>
+          <p>Cliente: {{ cliente.azienda }}</p>
+          <p>Dislocazione: {{ estintore.dislocazione }}</p>
+          <p>Prossimo controllo: {{ estintore.data_controllo.strftime('%d/%m/%Y') }}</p>
+        </div>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">Scansiona il QR code per vedere i dettagli dell'estintore</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style media="print">
+  @page {
+    size: auto;
+    margin: 0mm;
+  }
+  
+  body {
+    margin: 1cm;
+  }
+  
+  .btn-group, .sidebar, .navbar, .card-header, .card-footer {
+    display: none !important;
+  }
+  
+  .card {
+    border: none !important;
+  }
+  
+  .card-body {
+    padding: 0 !important;
+  }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Dati da inserire nel QR code
+    var qrData = `
+ID: {{ estintore.id }}
+Matricola: {{ estintore.matricola }}
+Tipologia: {{ estintore.tipologia }} {{ estintore.capacita }}
+Cliente: {{ cliente.azienda }}
+Dislocazione: {{ estintore.dislocazione }}
+Data Controllo: {{ estintore.data_controllo.strftime('%d/%m/%Y') }}
+`;
+    
+    // Genera il QR code
+    new QRCode(document.getElementById("qrcode"), {
+      text: qrData,
+      width: 200,
+      height: 200,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  });
+</script>
+{% endblock %}

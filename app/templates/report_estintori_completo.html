@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Elenco Completo Estintori - GEAM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .report-header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .report-header p {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 0;
+        }
+        .report-info {
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        .report-summary {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 11px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .client-group {
+            margin-top: 20px;
+            page-break-inside: avoid;
+        }
+        .client-title {
+            background-color: #e9ecef;
+            padding: 8px;
+            font-weight: bold;
+            border-radius: 5px 5px 0 0;
+        }
+        .page-number {
+            text-align: center;
+            font-size: 10px;
+            color: #777;
+            margin-top: 20px;
+        }
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+        .status-maintenance {
+            color: orange;
+            font-weight: bold;
+        }
+        .date-expired {
+            color: red;
+            font-weight: bold;
+        }
+        .date-warning {
+            color: orange;
+        }
+        .date-ok {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-header">
+        <h1>Elenco Completo Estintori</h1>
+        <p>Generato il {{ now.strftime('%d/%m/%Y %H:%M') }}</p>
+    </div>
+
+    <div class="report-info">
+        <p><strong>Totale estintori:</strong> {{ estintori|length }}</p>
+        <p><strong>Clienti:</strong> {{ clienti_count }}</p>
+    </div>
+
+    <div class="report-summary">
+        <p><strong>Riepilogo delle scadenze:</strong></p>
+        <ul>
+            <li>Estintori scaduti: {{ estintori_scaduti }}</li>
+            <li>Estintori in scadenza nei prossimi 30 giorni: {{ estintori_prossimi30 }}</li>
+            <li>Estintori in manutenzione: {{ estintori_in_manutenzione }}</li>
+        </ul>
+    </div>
+
+    {% for cliente in clienti %}
+    <div class="client-group">
+        <div class="client-title">
+            Cliente: {{ cliente.azienda }} - {{ cliente.tipologia }}
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>P.</th>
+                    <th>Tipologia</th>
+                    <th>Matricola</th>
+                    <th>Dislocazione</th>
+                    <th>Marca</th>
+                    <th>Data Fabb.</th>
+                    <th>Data Inst.</th>
+                    <th>Controllo</th>
+                    <th>Revisione</th>
+                    <th>Collaudo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estintore in estintori_per_cliente[cliente.id] %}
+                <tr>
+                    <td>{{ estintore.postazione }}{% if estintore.suffisso_postazione %}/{{ estintore.suffisso_postazione }}{% endif %}</td>
+                    <td>{{ estintore.tipologia }} {{ estintore.capacita }}</td>
+                    <td>{{ estintore.matricola }}</td>
+                    <td>{{ estintore.dislocazione }}</td>
+                    <td>{{ estintore.marca }}</td>
+                    <td>{{ estintore.data_fabbricazione }}</td>
+                    <td>{{ estintore.data_installazione.strftime('%d/%m/%Y') }}</td>
+                    <td>
+                        {% set giorni_controllo = (estintore.data_controllo - now.date()).days %}
+                        <span class="{% if giorni_controllo < 0 %}date-expired{% elif giorni_controllo <= 30 %}date-warning{% else %}date-ok{% endif %}">
+                            {{ estintore.data_controllo.strftime('%d/%m/%Y') }}
+                            {% if giorni_controllo < 0 %}({{ -giorni_controllo }} gg){% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        {% if estintore.data_revisione %}
+                            {% set giorni_revisione = (estintore.data_revisione - now.date()).days %}
+                            <span class="{% if giorni_revisione < 0 %}date-expired{% elif giorni_revisione <= 30 %}date-warning{% else %}date-ok{% endif %}">
+                                {{ estintore.data_revisione.strftime('%d/%m/%Y') }}
+                            </span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if estintore.data_collaudo %}
+                            {% set giorni_collaudo = (estintore.data_collaudo - now.date()).days %}
+                            <span class="{% if giorni_collaudo < 0 %}date-expired{% elif giorni_collaudo <= 30 %}date-warning{% else %}date-ok{% endif %}">
+                                {{ estintore.data_collaudo.strftime('%d/%m/%Y') }}
+                            </span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+
+    <div style="margin-top: 20px; font-size: 9px; text-align: center; color: #777;">
+        Report generato da GEAM - {{ now.strftime('%d/%m/%Y %H:%M') }}
+    </div>
+</body>
+</html>

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}{{ fornitore.azienda }} - Dettagli Fornitore - GEAM{% endblock %}
+
+{% block page_title %}Dettagli Fornitore: {{ fornitore.azienda }}{% endblock %}
+
+{% block page_actions %}
+<div class="btn-group">
+    <a href="{{ url_for('fornitori.index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Torna alla lista
+    </a>
+    <a href="{{ url_for('fornitori.modifica', id=fornitore.id) }}" class="btn btn-warning">
+        <i class="fas fa-edit"></i> Modifica
+    </a>
+    <button type="button" class="btn btn-danger" onclick="confermaEliminazione('{{ fornitore.azienda }}', '{{ url_for('fornitori.elimina', id=fornitore.id) }}')">
+        <i class="fas fa-trash"></i> Elimina
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-building me-1"></i>
+                Informazioni Aziendali
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Azienda</div>
+                    <div class="col-md-8">{{ fornitore.azienda }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Indirizzo</div>
+                    <div class="col-md-8">
+                        {{ fornitore.indirizzo }}<br>
+                        {{ fornitore.cap }} {{ fornitore.comune }} ({{ fornitore.provincia }})
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Data registrazione</div>
+                    <div class="col-md-8">{{ fornitore.created_at.strftime('%d/%m/%Y %H:%M') }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Ultimo aggiornamento</div>
+                    <div class="col-md-8">{{ fornitore.updated_at.strftime('%d/%m/%Y %H:%M') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-address-card me-1"></i>
+                Contatti e Note
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Telefono</div>
+                    <div class="col-md-8">
+                        {% if fornitore.telefono %}
+                            <a href="tel:{{ fornitore.telefono }}" class="text-decoration-none">
+                                <i class="fas fa-phone text-primary me-2"></i>{{ fornitore.telefono }}
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Non specificato</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Cellulare</div>
+                    <div class="col-md-8">
+                        {% if fornitore.cellulare %}
+                            <a href="tel:{{ fornitore.cellulare }}" class="text-decoration-none">
+                                <i class="fas fa-mobile-alt text-success me-2"></i>{{ fornitore.cellulare }}
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Non specificato</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Email</div>
+                    <div class="col-md-8">
+                        {% if fornitore.email %}
+                            <a href="mailto:{{ fornitore.email }}" class="text-decoration-none">
+                                <i class="fas fa-envelope text-info me-2"></i>{{ fornitore.email }}
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Non specificata</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Note</div>
+                    <div class="col-md-8">
+                        {% if fornitore.note %}
+                            {{ fornitore.note|nl2br }}
+                        {% else %}
+                            <span class="text-muted">Nessuna nota</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal di conferma eliminazione -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">Conferma Eliminazione</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Sei sicuro di voler eliminare il fornitore <strong id="nomeFornitore"></strong>?</p>
+                <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Questa operazione non può essere annullata!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                <form id="deleteForm" method="POST">
+                    <button type="submit" class="btn btn-danger">Elimina</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function confermaEliminazione(nome, url) {
+        document.getElementById('nomeFornitore').textContent = nome;
+        document.getElementById('deleteForm').action = url;
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,657 @@
+{% extends "base.html" %}
+
+{% block title %}Scadenze Estintori - GEAM{% endblock %}
+
+{% block page_title %}Gestione Scadenze{% endblock %}
+
+{% block page_actions %}
+<div class="btn-group">
+  <a href="{{ url_for('estintori.index') }}" class="btn btn-secondary">
+    <i class="fas fa-fire-extinguisher"></i> Elenco Estintori
+  </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Carta dei filtri principale -->
+<div class="card mb-4">
+  <div class="card-header">
+    <i class="fas fa-filter me-1"></i>
+    Filtri Scadenze
+  </div>
+  <div class="card-body">
+    <!-- Prima riga di filtri con dimensioni uniformi -->
+    <div class="row mb-3">
+      <!-- Prima riga di filtri: due colonne principali -->
+      <div class="col-md-6">
+        <label class="form-label">Periodo</label>
+        <div class="btn-group w-100" role="group">
+          <a href="{{ url_for('estintori.scadenze', periodo='scaduti', cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente=tipo_cliente, data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-danger {{ 'active' if periodo == 'scaduti' }}">
+            Scaduti
+          </a>
+          <a href="{{ url_for('estintori.scadenze', periodo='prossimi30', cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente=tipo_cliente, data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-warning {{ 'active' if periodo == 'prossimi30' }}">
+            30 gg
+          </a>
+          <a href="{{ url_for('estintori.scadenze', periodo='prossimi60', cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente=tipo_cliente, data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-primary {{ 'active' if periodo == 'prossimi60' }}">
+            60 gg
+          </a>
+          <a href="{{ url_for('estintori.scadenze', periodo='prossimi90', cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente=tipo_cliente, data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-success {{ 'active' if periodo == 'prossimi90' }}">
+            90 gg
+          </a>
+          <a href="{{ url_for('estintori.scadenze', periodo='prossimi180', cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente=tipo_cliente, data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-info {{ 'active' if periodo == 'prossimi180' }}">
+            6 mesi
+          </a>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="row">
+          <!-- Tipo Scadenza -->
+          <div class="col-md-6">
+            <label class="form-label">Tipo Scadenza</label>
+            <div class="btn-group w-100" role="group">
+              <a href="{{ url_for('estintori.scadenze', periodo=periodo, cliente_id=cliente_id, tipo_scadenza='tutto', tipo_cliente=tipo_cliente, data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-primary {{ 'active' if tipo_scadenza == 'tutto' }}">
+                Tutto
+              </a>
+              <a href="{{ url_for('estintori.scadenze', periodo=periodo, cliente_id=cliente_id, tipo_scadenza='controllo', tipo_cliente=tipo_cliente, data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-primary {{ 'active' if tipo_scadenza == 'controllo' }}">
+                Contr.
+              </a>
+              <a href="{{ url_for('estintori.scadenze', periodo=periodo, cliente_id=cliente_id, tipo_scadenza='revisione', tipo_cliente=tipo_cliente, data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-primary {{ 'active' if tipo_scadenza == 'revisione' }}">
+                Rev.
+              </a>
+              <a href="{{ url_for('estintori.scadenze', periodo=periodo, cliente_id=cliente_id, tipo_scadenza='collaudo', tipo_cliente=tipo_cliente, data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-primary {{ 'active' if tipo_scadenza == 'collaudo' }}">
+                Coll.
+              </a>
+            </div>
+          </div>
+          
+          <!-- Tipo Cliente -->
+          <div class="col-md-6">
+            <label class="form-label">Tipo Cliente</label>
+            <div class="btn-group w-100" role="group">
+              <a href="{{ url_for('estintori.scadenze', periodo=periodo, cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente='tutti', data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-secondary {{ 'active' if tipo_cliente == 'tutti' }}">
+                Tutti
+              </a>
+              <a href="{{ url_for('estintori.scadenze', periodo=periodo, cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente='Fisso', data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-secondary {{ 'active' if tipo_cliente == 'Fisso' }}">
+                Fisso
+              </a>
+              <a href="{{ url_for('estintori.scadenze', periodo=periodo, cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente='Stagionale', data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-secondary {{ 'active' if tipo_cliente == 'Stagionale' }}">
+                Stag.
+              </a>
+              <a href="{{ url_for('estintori.scadenze', periodo=periodo, cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente='Occasionale', data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-secondary {{ 'active' if tipo_cliente == 'Occasionale' }}">
+                Occ.
+              </a>
+              <a href="{{ url_for('estintori.scadenze', periodo=periodo, cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente='Cessato', data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}" class="btn btn-sm btn-outline-secondary {{ 'active' if tipo_cliente == 'Cessato' }}">
+                Cess.
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Seconda riga con cliente e zona fianco a fianco -->
+	<div class="row mb-3">
+		<div class="col-md-6">
+			<label class="form-label">Cliente</label>
+			<select class="form-select" onchange="location.href='{{ url_for('estintori.scadenze') }}?periodo={{ periodo }}&tipo_scadenza={{ tipo_scadenza }}&tipo_cliente={{ tipo_cliente }}&data_inizio={{ data_inizio }}&data_fine={{ data_fine }}&zona={{ zona }}&cliente_id='+this.value">
+				<option value="">Tutti i clienti</option>
+				{% for cliente in clienti %}
+					<option value="{{ cliente.id }}" {% if cliente_id == cliente.id %}selected{% endif %}>{{ cliente.azienda }}</option>
+				{% endfor %}
+			</select>
+		</div>
+  
+		<div class="col-md-6">
+			<label class="form-label">Zona</label>
+			<select class="form-select" onchange="location.href='{{ url_for('estintori.scadenze') }}?periodo={{ periodo }}&tipo_scadenza={{ tipo_scadenza }}&tipo_cliente={{ tipo_cliente }}&data_inizio={{ data_inizio }}&data_fine={{ data_fine }}&cliente_id={{ cliente_id }}&zona='+this.value">
+				<option value="tutte">Tutte le zone</option>
+				{% for z in zone %}
+					<option value="{{ z[0] }}" {% if zona == z[0] %}selected{% endif %}>{{ z[0] }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+  </div>
+</div>
+
+<!-- NUOVO BLOCCO: Filtro per intervallo di date -->
+<div class="row mb-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-calendar-alt me-1"></i>
+        Filtro Intervallo Date
+      </div>
+      <div class="card-body">
+        <form method="GET" action="{{ url_for('estintori.scadenze') }}" class="row g-3" id="dateFilterForm">
+          {# Mantieni i filtri esistenti come campi nascosti #}
+          <input type="hidden" name="cliente_id" value="{{ cliente_id or '' }}">
+          <input type="hidden" name="tipo_scadenza" value="{{ tipo_scadenza or 'tutto' }}">
+          <input type="hidden" name="tipo_cliente" value="{{ tipo_cliente or 'tutti' }}">
+          <input type="hidden" name="periodo" value="{{ periodo or 'prossimi30' }}">
+          <input type="hidden" name="zona" value="{{ zona or 'tutte' }}">
+          
+          <div class="col-md-5">
+            <label for="data_inizio" class="form-label">Data Inizio</label>
+            <input type="date" id="data_inizio" name="data_inizio" class="form-control" value="{{ data_inizio or '' }}">
+          </div>
+          
+          <div class="col-md-5">
+            <label for="data_fine" class="form-label">Data Fine</label>
+            <input type="date" id="data_fine" name="data_fine" class="form-control" value="{{ data_fine or '' }}">
+          </div>
+          
+          <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary me-2">
+              <i class="fas fa-search"></i> Filtra
+            </button>
+            {% if data_inizio or data_fine %}
+              <a href="{{ url_for('estintori.scadenze', cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente=tipo_cliente, periodo=periodo, zona=zona) }}" class="btn btn-secondary">
+                <i class="fas fa-times"></i>
+              </a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabella estintori - SPOSTATA PRIMA DEI FILTRI ATTIVI -->
+<div class="card mb-4">
+  <div class="card-header">
+    <i class="fas fa-calendar-alt me-1"></i>
+    Elenco Estintori in Scadenza
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <form id="bulkUpdateForm" method="POST" action="{{ url_for('estintori.aggiorna_scadenze_multiplo') }}">
+        <input type="hidden" name="zona" value="{{ zona }}">
+        <div class="mb-3 d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i> Salva Modifiche
+          </button>
+        </div>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="selectAll">
+                </div>
+              </th>
+              <th>Cliente</th>
+              <th>Matricola</th>
+              <th>Tipologia</th>
+              <th>Postazione</th><!-- NUOVA COLONNA -->
+              <th>Data Fabbr.</th><!-- NUOVA COLONNA -->
+              <th>Dislocazione</th>
+              <th>Data Controllo</th>
+              <th>Data Revisione</th>
+              <th>Data Collaudo</th>
+              <th>Stato</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for estintore in estintori.items %}
+            <tr>
+              <td>
+                <div class="form-check">
+                  <input class="form-check-input estintore-checkbox" type="checkbox" name="selected_ids[]" value="{{ estintore.id }}">
+                </div>
+              </td>
+              <td>
+                <a href="{{ url_for('clienti.visualizza', id=estintore.cliente_id) }}" class="text-decoration-none">
+                  {{ estintore.cliente.azienda }}
+                </a>
+              </td>
+              <td>{{ estintore.matricola }}</td>
+              <td>{{ estintore.tipologia }} {{ estintore.capacita }}</td>
+              <td>{{ estintore.postazione }}{% if estintore.suffisso_postazione %}/{{ estintore.suffisso_postazione }}{% endif %}</td><!-- NUOVA COLONNA -->
+              <td>{{ estintore.data_fabbricazione.split('/')[1] if '/' in estintore.data_fabbricazione else estintore.data_fabbricazione }}</td><!-- NUOVA COLONNA -->
+              <td>{{ estintore.dislocazione }}</td>
+              <td>
+                <input type="date" class="form-control form-control-sm" 
+                      name="data_controllo_{{ estintore.id }}" 
+                      value="{{ estintore.data_controllo.strftime('%Y-%m-%d') }}"
+                      data-original-value="{{ estintore.data_controllo.strftime('%Y-%m-%d') }}">
+              </td>
+              <td>
+                <input type="date" class="form-control form-control-sm" 
+                      name="data_revisione_{{ estintore.id }}" 
+                      value="{{ estintore.data_revisione.strftime('%Y-%m-%d') if estintore.data_revisione else '' }}"
+                      data-original-value="{{ estintore.data_revisione.strftime('%Y-%m-%d') if estintore.data_revisione else '' }}">
+              </td>
+              <td>
+                <input type="date" class="form-control form-control-sm" 
+                      name="data_collaudo_{{ estintore.id }}" 
+                      value="{{ estintore.data_collaudo.strftime('%Y-%m-%d') if estintore.data_collaudo else '' }}"
+                      data-original-value="{{ estintore.data_collaudo.strftime('%Y-%m-%d') if estintore.data_collaudo else '' }}">
+              </td>
+              <td>
+                <select class="form-select form-select-sm" name="stato_{{ estintore.id }}" data-original-value="{{ estintore.stato }}">
+                  <option value="Attivo" {% if estintore.stato == 'Attivo' %}selected{% endif %}>Attivo</option>
+                  <option value="In manutenzione" {% if estintore.stato == 'In manutenzione' %}selected{% endif %}>In manutenzione</option>
+                </select>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <a href="{{ url_for('estintori.visualizza', id=estintore.id) }}" class="btn btn-sm btn-info btn-icon" title="Visualizza">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                  <a href="{{ url_for('estintori.modifica', id=estintore.id) }}" class="btn btn-sm btn-warning btn-icon" title="Modifica completa">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="12" class="text-center py-4">
+                <div class="alert alert-info mb-0">
+                  <i class="fas fa-info-circle me-2"></i>
+                  Nessun estintore in scadenza con i filtri selezionati.
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        
+        <!-- Contatore elementi selezionati -->
+        <div class="alert alert-info mt-3 d-none" id="selectionInfo">
+          <i class="fas fa-info-circle me-2"></i>
+          <span id="selectedCount">0</span> estintori selezionati.
+          <button type="button" class="btn btn-outline-primary btn-sm ms-2" id="btnApplyBulkUpdate">
+            Imposta data <span id="updateTypeLabel">controllo</span> a tutti
+          </button>
+          <div class="mt-2 d-none" id="bulkDatePickerContainer">
+            <div class="input-group">
+              <input type="date" class="form-control" id="bulkDateValue">
+              <select class="form-select" id="bulkUpdateType" style="max-width: 150px;">
+                <option value="controllo">Controllo</option>
+                <option value="revisione">Revisione</option>
+                <option value="collaudo">Collaudo</option>
+              </select>
+              <button type="button" class="btn btn-primary" id="btnConfirmBulkUpdate">
+                Applica
+              </button>
+              <button type="button" class="btn btn-secondary" id="btnCancelBulkUpdate">
+                Annulla
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Paginazione -->
+    {% if estintori.pages > 1 %}
+    <nav aria-label="Paginazione estintori">
+      <ul class="pagination justify-content-center">
+        {% for page_num in estintori.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if page_num %}
+            {% if page_num == estintori.page %}
+            <li class="page-item active">
+              <span class="page-link">{{ page_num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('estintori.scadenze', page=page_num, periodo=periodo, cliente_id=cliente_id, tipo_scadenza=tipo_scadenza, tipo_cliente=tipo_cliente, data_inizio=data_inizio, data_fine=data_fine, zona=zona) }}">{{ page_num }}</a>
+            </li>
+            {% endif %}
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+  <div class="card-footer text-muted">
+    Mostra {{ estintori.items|length }} estintori in scadenza su un totale di {{ estintori.total }}
+  </div>
+</div>
+
+<!-- Filtri attivi in versione più compatta -->
+<div class="alert alert-info mb-4 py-2">
+  <div class="d-flex flex-wrap align-items-center">
+    <div class="me-3 mb-1">
+      <i class="fas fa-filter"></i> <strong>Filtri attivi:</strong>
+    </div>
+    
+    <!-- Periodo -->
+    <div class="me-3 mb-1">
+      {% if data_inizio or data_fine %}
+        <span class="badge bg-info">
+          Periodo: {{ data_inizio or 'Inizio' }} - {{ data_fine or 'Fine' }}
+        </span>
+      {% else %}
+        {% if periodo == 'scaduti' %}
+          <span class="badge bg-danger">Scaduti</span>
+        {% elif periodo == 'prossimi30' %}
+          <span class="badge bg-warning">Prossimi 30 giorni</span>
+        {% elif periodo == 'prossimi60' %}
+          <span class="badge bg-primary">Prossimi 60 giorni</span>
+        {% elif periodo == 'prossimi90' %}
+          <span class="badge bg-success">Prossimi 90 giorni</span>
+        {% elif periodo == 'prossimi180' %}
+          <span class="badge bg-info">Prossimi 6 mesi (180 giorni)</span>
+        {% endif %}
+      {% endif %}
+    </div>
+    
+    <!-- Tipo Scadenza -->
+    <div class="me-3 mb-1">
+      <span class="badge bg-primary">{{ 'Tutte le scadenze' if tipo_scadenza == 'tutto' else tipo_scadenza|capitalize }}</span>
+    </div>
+    
+    <!-- Tipo Cliente -->
+    <div class="me-3 mb-1">
+      <span class="badge bg-secondary">{{ 'Tutti i tipi' if tipo_cliente == 'tutti' else tipo_cliente }}</span>
+    </div>
+    
+    <!-- Zona -->
+    {% if zona != 'tutte' %}
+    <div class="me-3 mb-1">
+      <span class="badge bg-info">Zona: {{ zona }}</span>
+    </div>
+    {% endif %}
+    
+    <!-- Cliente -->
+    {% if cliente_filtrato %}
+    <div class="me-3 mb-1">
+      <span class="badge bg-success">Cliente: {{ cliente_filtrato.azienda }}</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Verifica che i campi data abbiano valori validi quando il form viene inviato
+    document.getElementById('dateFilterForm').addEventListener('submit', function(event) {
+      var dataInizio = document.getElementById('data_inizio').value;
+      var dataFine = document.getElementById('data_fine').value;
+      
+      if (dataInizio && dataFine && dataInizio > dataFine) {
+        event.preventDefault();
+        alert('La data di inizio non può essere successiva alla data di fine');
+      }
+    });
+    
+    // Evidenzia gli input modificati
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+      input.addEventListener('change', function() {
+        const originalValue = this.getAttribute('data-original-value');
+        if (this.value !== originalValue) {
+          this.classList.add('bg-warning', 'text-dark');
+          
+          // Seleziona automaticamente la checkbox quando si modifica una data
+          const row = this.closest('tr');
+          const checkbox = row.querySelector('.estintore-checkbox');
+          if (checkbox) {
+            checkbox.checked = true;
+            updateSelectedCount();
+          }
+        } else {
+          this.classList.remove('bg-warning', 'text-dark');
+        }
+      });
+    });
+    
+    // Monitora anche le modifiche ai selettori di stato
+    const stateSelects = document.querySelectorAll('select[name^="stato_"]');
+    stateSelects.forEach(select => {
+      select.addEventListener('change', function() {
+        const originalValue = this.getAttribute('data-original-value');
+        if (this.value !== originalValue) {
+          this.classList.add('bg-warning', 'text-dark');
+          
+          // Seleziona automaticamente la checkbox quando si modifica lo stato
+          const row = this.closest('tr');
+          const checkbox = row.querySelector('.estintore-checkbox');
+          if (checkbox) {
+            checkbox.checked = true;
+            updateSelectedCount();
+          }
+        } else {
+          this.classList.remove('bg-warning', 'text-dark');
+        }
+      });
+    });
+    
+    // Gestione "Seleziona tutti"
+    const selectAllCheckbox = document.getElementById('selectAll');
+    if (selectAllCheckbox) {
+      selectAllCheckbox.addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.estintore-checkbox');
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = this.checked;
+        });
+        updateSelectedCount();
+      });
+    }
+    
+    // Aggiorna contatore elementi selezionati
+    const checkboxes = document.querySelectorAll('.estintore-checkbox');
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', updateSelectedCount);
+    });
+    
+    function updateSelectedCount() {
+      const checkedBoxes = document.querySelectorAll('.estintore-checkbox:checked');
+      const selectionInfo = document.getElementById('selectionInfo');
+      const selectedCount = document.getElementById('selectedCount');
+      
+      if (checkedBoxes.length > 0) {
+        selectionInfo.classList.remove('d-none');
+        selectedCount.textContent = checkedBoxes.length;
+      } else {
+        selectionInfo.classList.add('d-none');
+      }
+    }
+    
+    // Gestione aggiornamento in blocco
+    const btnApplyBulkUpdate = document.getElementById('btnApplyBulkUpdate');
+    const bulkDatePickerContainer = document.getElementById('bulkDatePickerContainer');
+    const btnConfirmBulkUpdate = document.getElementById('btnConfirmBulkUpdate');
+    const btnCancelBulkUpdate = document.getElementById('btnCancelBulkUpdate');
+    const bulkUpdateType = document.getElementById('bulkUpdateType');
+    const bulkDateValue = document.getElementById('bulkDateValue');
+    const updateTypeLabel = document.getElementById('updateTypeLabel');
+    
+    if (btnApplyBulkUpdate) {
+      btnApplyBulkUpdate.addEventListener('click', function() {
+        bulkDatePickerContainer.classList.remove('d-none');
+        
+        // Imposta la data di oggi come valore predefinito
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        bulkDateValue.value = formattedDate;
+      });
+    }
+    
+    if (bulkUpdateType) {
+      bulkUpdateType.addEventListener('change', function() {
+        updateTypeLabel.textContent = this.value;
+      });
+    }
+    
+    if (btnCancelBulkUpdate) {
+      btnCancelBulkUpdate.addEventListener('click', function() {
+        bulkDatePickerContainer.classList.add('d-none');
+      });
+    }
+    
+    if (btnConfirmBulkUpdate) {
+      btnConfirmBulkUpdate.addEventListener('click', function() {
+        const updateType = bulkUpdateType.value;
+        const dateValue = bulkDateValue.value;
+        
+        if (!dateValue) {
+          alert('Seleziona una data valida');
+          return;
+        }
+        
+        const checkedBoxes = document.querySelectorAll('.estintore-checkbox:checked');
+        checkedBoxes.forEach(checkbox => {
+          const estintoreId = checkbox.value;
+          const dateInput = document.querySelector(`input[name="data_${updateType}_${estintoreId}"]`);
+          
+          if (dateInput) {
+            dateInput.value = dateValue;
+            // Trigger dell'evento change per aggiornare lo stile
+            const event = new Event('change');
+            dateInput.dispatchEvent(event);
+          }
+        });
+        
+        bulkDatePickerContainer.classList.add('d-none');
+      });
+    }
+    
+    // Validazione form
+    const bulkUpdateForm = document.getElementById('bulkUpdateForm');
+    if (bulkUpdateForm) {
+      bulkUpdateForm.addEventListener('submit', function(event) {
+        const checkedBoxes = document.querySelectorAll('.estintore-checkbox:checked');
+        
+        if (checkedBoxes.length === 0) {
+          event.preventDefault();
+          alert('Seleziona almeno un estintore da aggiornare');
+          return false;
+        }
+        
+        // Verifica se ci sono modifiche
+        let hasChanges = false;
+        checkedBoxes.forEach(checkbox => {
+          const estintoreId = checkbox.value;
+          const dateInputs = [
+            document.querySelector(`input[name="data_controllo_${estintoreId}"]`),
+            document.querySelector(`input[name="data_revisione_${estintoreId}"]`),
+            document.querySelector(`input[name="data_collaudo_${estintoreId}"]`)
+          ];
+          
+          dateInputs.forEach(input => {
+            if (input && input.value !== input.getAttribute('data-original-value')) {
+              hasChanges = true;
+            }
+          });
+          
+          // Controlla anche i cambi di stato
+          const statoSelect = document.querySelector(`select[name="stato_${estintoreId}"]`);
+          if (statoSelect && statoSelect.value !== statoSelect.getAttribute('data-original-value')) {
+            hasChanges = true;
+          }
+        });
+        
+        if (!hasChanges) {
+          event.preventDefault();
+          alert('Nessuna modifica rilevata negli elementi selezionati');
+          return false;
+        }
+        
+        return true;
+      });
+    }
+
+    // NUOVA FUNZIONALITÀ: Disabilita i bottoni periodo quando sono selezionate le date
+    // Controllo iniziale degli input date
+    checkDateInputs();
+
+    // Verifica se gli input date sono compilati e disattiva i bottoni del periodo
+    function checkDateInputs() {
+      const dataInizio = document.getElementById('data_inizio').value;
+      const dataFine = document.getElementById('data_fine').value;
+      
+      // Se almeno uno dei due input date è compilato
+      if (dataInizio || dataFine) {
+        // Seleziona SOLO i bottoni nella sezione "Periodo"
+        const labels = document.querySelectorAll('label.form-label');
+        let periodButtons = [];
+        
+        // Trova la label "Periodo" e poi prendi il gruppo di bottoni associato
+        labels.forEach(label => {
+          if (label.textContent.trim() === 'Periodo') {
+            // Trova il contenitore dei bottoni che segue questa label
+            const btnGroup = label.nextElementSibling;
+            if (btnGroup && btnGroup.classList.contains('btn-group')) {
+              periodButtons = Array.from(btnGroup.querySelectorAll('a'));
+            }
+          }
+        });
+        
+        // Disabilita i bottoni del periodo
+        periodButtons.forEach(button => {
+          button.classList.add('opacity-50');
+          button.setAttribute('title', 'Filtro disabilitato quando si usa un intervallo di date personalizzato');
+          
+          button.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Per utilizzare i filtri di periodo predefiniti, cancella prima le date di inizio e fine.');
+            return false;
+          }, { once: true });
+        });
+      } else {
+        // Riattiva i bottoni periodo se le date sono vuote
+        const labels = document.querySelectorAll('label.form-label');
+        let periodButtons = [];
+        
+        // Trova la label "Periodo" e poi prendi il gruppo di bottoni associato
+        labels.forEach(label => {
+          if (label.textContent.trim() === 'Periodo') {
+            // Trova il contenitore dei bottoni che segue questa label
+            const btnGroup = label.nextElementSibling;
+            if (btnGroup && btnGroup.classList.contains('btn-group')) {
+              periodButtons = Array.from(btnGroup.querySelectorAll('a'));
+            }
+          }
+        });
+        
+        // Riattiva i bottoni
+        periodButtons.forEach(button => {
+          button.classList.remove('opacity-50');
+          button.removeAttribute('title');
+        });
+      }
+    }
+    
+    // Monitora i cambiamenti agli input date
+    const filterDateInputs = document.querySelectorAll('#data_inizio, #data_fine');
+    filterDateInputs.forEach(input => {
+      input.addEventListener('change', checkDateInputs);
+    });
+
+    // Aggiungi un gestore per il pulsante di reset delle date
+    const resetButton = document.querySelector('.col-md-2.d-flex.align-items-end a.btn-secondary');
+    if (resetButton) {
+      resetButton.addEventListener('click', function() {
+        // Dopo il reset, rimuoviamo la classe opacity-50 dai bottoni del periodo
+        setTimeout(function() {
+          const labels = document.querySelectorAll('label.form-label');
+          labels.forEach(label => {
+            if (label.textContent.trim() === 'Periodo') {
+              const btnGroup = label.nextElementSibling;
+              if (btnGroup && btnGroup.classList.contains('btn-group')) {
+                const periodButtons = Array.from(btnGroup.querySelectorAll('a'));
+                periodButtons.forEach(button => {
+                  button.classList.remove('opacity-50');
+                  button.removeAttribute('title');
+                });
+              }
+            }
+          });
+        }, 100);
+      });
+    }
+  });
+</script>
+{% endblock %}

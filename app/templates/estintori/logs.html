@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Log Operazioni - GEAM{% endblock %}
+
+{% block page_title %}Registro Operazioni{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('estintori.index') }}" class="btn btn-secondary">
+  <i class="fas fa-fire-extinguisher"></i> Elenco Estintori
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+  <div class="card-header">
+    <i class="fas fa-filter me-1"></i>
+    Filtri Log
+  </div>
+  <div class="card-body">
+    <form method="GET" action="{{ url_for('estintori.logs') }}" class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label">Tipo Azione</label>
+        <select name="azione" class="form-select" onchange="this.form.submit()">
+          <option value="">Tutte le azioni</option>
+          {% for az in azioni %}
+            <option value="{{ az }}" {% if azione == az %}selected{% endif %}>{{ az|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      
+      <div class="col-md-6">
+        <label class="form-label">Cliente</label>
+        <select name="cliente_id" class="form-select" onchange="this.form.submit()">
+          <option value="">Tutti i clienti</option>
+          {% for cliente in clienti %}
+            <option value="{{ cliente.id }}" {% if cliente_id == cliente.id %}selected{% endif %}>{{ cliente.azienda }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      
+      <div class="col-md-2 d-flex align-items-end">
+        {% if cliente_id or azione %}
+          <a href="{{ url_for('estintori.logs') }}" class="btn btn-secondary w-100">
+            <i class="fas fa-times"></i> Resetta
+          </a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header">
+    <i class="fas fa-history me-1"></i>
+    Registro Operazioni
+    {% if azione %}
+      <span class="badge bg-primary ms-2">{{ azione|capitalize }}</span>
+    {% endif %}
+    
+    {% if cliente_filtrato %}
+      <span class="badge bg-success ms-2">{{ cliente_filtrato.azienda }}</span>
+    {% endif %}
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Data e Ora</th>
+            <th>Azione</th>
+            <th>Cliente</th>
+            <th>Estintore</th>
+            <th>Dettagli</th>
+            <th>Utente</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs.items %}
+          <tr>
+            <td>{{ log.data_ora.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+            <td>
+              {% if log.azione == 'creazione' %}
+                <span class="badge bg-success">{{ log.azione }}</span>
+              {% elif log.azione == 'modifica' %}
+                <span class="badge bg-warning">{{ log.azione }}</span>
+              {% elif log.azione == 'eliminazione' %}
+                <span class="badge bg-danger">{{ log.azione }}</span>
+              {% else %}
+                <span class="badge bg-info">{{ log.azione }}</span>
+              {% endif %}
+            </td>
+            <td>
+              <!-- Mostra solo il nome dell'azienda senza link cliccabili -->
+              {% if log.cliente %}
+                <span class="fw-bold">{{ log.cliente.azienda }}</span>
+              {% elif log.dettagli_dict and log.dettagli_dict.cliente and 'azienda' in log.dettagli_dict.cliente %}
+                <span class="fw-bold">{{ log.dettagli_dict.cliente.azienda }}</span>
+                {% if log.azione == 'eliminazione' and not log.dettagli_dict.tipo_eliminazione == 'estintore' %}
+                  <span class="text-muted">(eliminato)</span>
+                {% endif %}
+              {% elif log.dettagli_dict and log.dettagli_dict.cliente_info and 'azienda' in log.dettagli_dict.cliente_info %}
+                <span class="fw-bold">{{ log.dettagli_dict.cliente_info.azienda }}</span>
+              {% else %}
+                <span class="text-muted">N/D</span>
+              {% endif %}
+            </td>
+            <td>
+              <!-- Informazioni sull'estintore - verificare tutte le possibili fonti di dati -->
+              {% if log.estintore %}
+                <!-- Caso 1: Estintore ancora esistente e relazione caricata -->
+                <span class="fw-bold">{{ log.estintore.matricola }}</span>
+              {% elif log.estintore_id and log.dettagli_dict and log.dettagli_dict.estintore and 'matricola' in log.dettagli_dict.estintore %}
+                <!-- Caso 2: Estintore nei dettagli del log con log.estintore_id -->
+                <span class="fw-bold">{{ log.dettagli_dict.estintore.matricola }}</span>
+              {% elif log.dettagli_dict and log.dettagli_dict.estintore and 'matricola' in log.dettagli_dict.estintore %}
+                <!-- Caso 3: Estintore nei dettagli del log senza log.estintore_id -->
+                <span class="fw-bold">{{ log.dettagli_dict.estintore.matricola }}{% if log.azione == 'eliminazione' %} (eliminato){% endif %}</span>
+              {% else %}
+                <!-- Nessun dato estintore disponibile -->
+                <span class="text-muted">N/D</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if log.azione == 'modifica' and log.dettagli_dict.campi_modificati %}
+                <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#logDetails{{ log.id }}" aria-expanded="false">
+                  Mostra modifiche ({{ log.dettagli_dict.campi_modificati|length }})
+                </button>
+                <div class="collapse mt-2" id="logDetails{{ log.id }}">
+                  <div class="card card-body">
+                    <ul class="mb-0">
+                    {% for modifica in log.dettagli_dict.campi_modificati %}
+                      <li>
+                        <strong>{{ modifica.campo }}:</strong> 
+                        <span class="text-danger">{{ modifica.vecchio }}</span>
+                        <i class="fas fa-arrow-right mx-1"></i>
+                        <span class="text-success">{{ modifica.nuovo }}</span>
+                      </li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              {% elif log.azione == 'eliminazione' and log.dettagli_dict.estintore %}
+                Eliminazione estintore {{ log.dettagli_dict.estintore.tipologia }} - {{ log.dettagli_dict.estintore.matricola }}
+              {% elif log.azione == 'eliminazione' and log.dettagli_dict.tipo_eliminazione == 'estintore' %}
+                Eliminazione estintore
+              {% elif log.azione == 'eliminazione' %}
+                Eliminazione {{ 'cliente' if not log.estintore_id else 'estintore' }}
+              {% elif log.azione == 'creazione' and log.estintore_id %}
+                Creazione nuovo estintore
+              {% elif log.azione == 'creazione' and not log.estintore_id %}
+                Creazione nuovo cliente
+              {% else %}
+                {{ log.azione|capitalize }}
+              {% endif %}
+            </td>
+            <td>{{ log.utente or 'Sistema' }}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" class="text-center py-4">
+              <div class="alert alert-info mb-0">
+                <i class="fas fa-info-circle me-2"></i>
+                Nessun log disponibile con i filtri selezionati.
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Paginazione -->
+    {% if logs.pages > 1 %}
+    <nav aria-label="Paginazione log">
+      <ul class="pagination justify-content-center">
+        {% for page_num in logs.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if page_num %}
+            {% if page_num == logs.page %}
+            <li class="page-item active">
+              <span class="page-link">{{ page_num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('estintori.logs', page=page_num, azione=azione, cliente_id=cliente_id) }}">{{ page_num }}</a>
+            </li>
+            {% endif %}
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">...</span>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+  <div class="card-footer text-muted">
+    Mostra {{ logs.items|length }} log
+    {% if azione %}per l'azione "{{ azione }}"{% endif %}
+    {% if cliente_filtrato %}per il cliente "{{ cliente_filtrato.azienda }}"{% endif %}
+    su un totale di {{ logs.total }}
+  </div>
+</div>
+{% endblock %}

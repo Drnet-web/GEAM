@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lista di Controllo - {{ cliente.azienda }} - GEAM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .report-header {
+            margin-bottom: 20px;
+        }
+        .report-header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 5px;
+            margin-top: 0;
+            text-align: center;
+        }
+        /* Utilizzo di table per garantire il layout orizzontale */
+        .info-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 10px 0;
+        }
+        .info-cell {
+            vertical-align: top;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .cliente-cell {
+            width: 55%;
+        }
+        .firma-cell {
+            width: 40%;
+        }
+        .firme-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 20px 0;
+        }
+        .firma-box {
+            text-align: center;
+            padding-top: 30px;
+        }
+        .firma-line {
+            border-top: 1px solid #333;
+            padding-top: 5px;
+        }
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+        .main-table th, .main-table td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        .main-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .main-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .checkbox-cell {
+            text-align: center;
+            width: 50px;
+        }
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 1px solid #333;
+            display: inline-block;
+            margin: 0 auto;
+        }
+        .note-cell {
+            width: 15%;
+        }
+        .data-intervento {
+            margin-top: 15px;
+        }
+        .data-intervento-label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .data-intervento-value {
+            border-bottom: 1px solid #333;
+            display: inline-block;
+            width: 150px;
+            height: 18px;
+        }
+        h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        @page {
+            size: A4 landscape;
+            margin: 1cm;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-header">
+        <h1>Lista di Controllo Estintori</h1>
+    </div>
+
+    <div class="info-container">
+        <table class="info-table">
+            <tr>
+                <td class="info-cell cliente-cell">
+                    <h3>Dati Cliente:</h3>
+                    <p><strong>Azienda:</strong> {{ cliente.azienda }}</p>
+                    <p><strong>Indirizzo:</strong> {{ cliente.indirizzo }}, {{ cliente.cap }} {{ cliente.comune }} ({{ cliente.provincia }})</p>
+                    <p><strong>Telefono:</strong> {{ cliente.telefono or 'N/D' }} - <strong>Email:</strong> {{ cliente.email or 'N/D' }}</p>
+                    
+                    <div class="data-intervento">
+                        <span class="data-intervento-label">Data intervento:</span>
+                        <span class="data-intervento-value"></span>
+                    </div>
+                </td>
+                <td class="info-cell firma-cell">
+                    <h3>Autorizzazioni:</h3>
+                    <table class="firme-table">
+                        <tr>
+                            <td class="firma-box">
+                                <div class="firma-line">Firma del tecnico</div>
+                            </td>
+                            <td class="firma-box">
+                                <div class="firma-line">Firma del cliente</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <table class="main-table">
+        <thead>
+            <tr>
+                <th>Post.</th>
+                <th>Tipologia</th>
+                <th>Marca</th>
+                <th>Matricola</th>
+                <th>Fabbr.</th>
+                <th>Dislocazione</th>
+                <th class="checkbox-cell">Controllo</th>
+                <th class="checkbox-cell">Revisione</th>
+                <th class="checkbox-cell">Collaudo</th>
+                <th class="note-cell">Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estintore in estintori %}
+            <tr>
+                <td>{{ estintore.postazione }}{% if estintore.suffisso_postazione %}/{{ estintore.suffisso_postazione }}{% endif %}</td>
+                <td>{{ estintore.tipologia }} {{ estintore.capacita }}</td>
+                <td>{{ estintore.marca }}</td>
+                <td>{{ estintore.matricola }}</td>
+                <td>{{ estintore.data_fabbricazione.split('/')[1] if '/' in estintore.data_fabbricazione else estintore.data_fabbricazione }}</td>
+                <td>{{ estintore.dislocazione }}</td>
+                <td class="checkbox-cell"><div class="checkbox"></div></td>
+                <td class="checkbox-cell"><div class="checkbox"></div></td>
+                <td class="checkbox-cell"><div class="checkbox"></div></td>
+                <td class="note-cell"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

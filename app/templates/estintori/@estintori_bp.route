@@ -1,0 +1,222 @@
+# Route per la pagina delle scadenze
+@estintori_bp.route('/scadenze')
+def scadenze():
+    """Visualizza gli estintori in scadenza"""
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+    
+    # Ottieni la data corrente
+    oggi = datetime.now().date()
+    
+    # Filtri
+    periodo = request.args.get('periodo', 'prossimi30')
+    cliente_id = request.args.get('cliente_id', None, type=int)
+    tipo_scadenza = request.args.get('tipo_scadenza', 'tutto')
+    tipo_cliente = request.args.get('tipo_cliente', 'tutti')
+    zona = request.args.get('zona', 'tutte')
+    
+    # Nuovi filtri per data
+    data_inizio_str = request.args.get('data_inizio', '')
+    data_fine_str = request.args.get('data_fine', '')
+    
+    data_inizio = None
+    data_fine = None
+    
+    # Conversione delle date se presenti e non vuote
+    if data_inizio_str and data_inizio_str.strip():
+        try:
+            data_inizio = datetime.strptime(data_inizio_str, '%Y-%m-%d').date()
+        except ValueError:
+            # Solo se la stringa non è vuota e il formato è sbagliato, mostriamo l'errore
+            if data_inizio_str.strip():
+                flash('Formato data inizio non valido', 'warning')
+            data_inizio_str = ''
+    
+    if data_fine_str and data_fine_str.strip():
+        try:
+            data_fine = datetime.strptime(data_fine_str, '%Y-%m-%d').date()
+        except ValueError:
+            # Solo se la stringa non è vuota e il formato è sbagliato, mostriamo l'errore
+            if data_fine_str.strip():
+                flash('Formato data fine non valido', 'warning')
+            data_fine_str = ''
+    
+    # Costruisci la query base
+    query = Estintore.query.join(Cliente)
+    
+    # Applica il filtro per cliente
+    if cliente_id:
+        query = query.filter(Estintore.cliente_id == cliente_id)
+    
+    # Applica il filtro per tipo di cliente
+    if tipo_cliente != 'tutti':
+        query = query.filter(Cliente.tipologia == tipo_cliente)
+    
+    # Applica il filtro per zona
+    if zona != 'tutte' and zona:
+        query = query.filter(Cliente.zona == zona)
+    
+    # Se sono specificate entrambe le date, usa l'intervallo personalizzato
+    if data_inizio and data_fine:
+        if tipo_scadenza == 'tutto':
+            query = query.filter(or_(
+                and_(Estintore.data_controllo >= data_inizio, Estintore.data_controllo <= data_fine),
+                and_(Estintore.data_revisione >= data_inizio, Estintore.data_revisione <= data_fine),
+                and_(Estintore.data_collaudo >= data_inizio, Estintore.data_collaudo <= data_fine)
+            ))
+        else:
+            # Applica il filtro per tipo di scadenza
+            if tipo_scadenza == 'controllo':
+                data_campo = Estintore.data_controllo
+            elif tipo_scadenza == 'revisione':
+                data_campo = Estintore.data_revisione
+            elif tipo_scadenza == 'collaudo':
+                data_campo = Estintore.data_collaudo
+            
+            query = query.filter(and_(data_campo >= data_inizio, data_campo <= data_fine))
+    
+    # Altrimenti applica il filtro per periodo predefinito
+    elif not (data_inizio or data_fine):
+        if tipo_scadenza == 'tutto':
+            if periodo == 'scaduti':
+                query = query.filter(or_(
+                    Estintore.data_controllo < oggi,
+                    Estintore.data_revisione < oggi,
+                    Estintore.data_collaudo < oggi
+                ))
+            elif periodo == 'prossimi30':
+                data_limite = oggi + timedelta(days=30)
+                query = query.filter(or_(
+                    and_(Estintore.data_controllo >= oggi, Estintore.data_controllo <= data_limite),
+                    and_(Estintore.data_revisione >= oggi, Estintore.data_revisione <= data_limite),
+                    and_(Estintore.data_collaudo >= oggi, Estintore.data_collaudo <= data_limite)
+                ))
+            elif periodo == 'prossimi60':
+                data_limite = oggi + timedelta(days=60)
+                query = query.filter(or_(
+                    and_(Estintore.data_controllo >= oggi, Estintore.data_controllo <= data_limite),
+                    and_(Estintore.data_revisione >= oggi, Estintore.data_revisione <= data_limite),
+                    and_(Estintore.data_collaudo >= oggi, Estintore.data_collaudo <= data_limite)
+                ))
+            elif periodo == 'prossimi90':
+                data_limite = oggi + timedelta(days=90)
+                query = query.filter(or_(
+                    and_(Estintore.data_controllo >= oggi, Estintore.data_controllo <= data_limite),
+                    and_(Estintore.data_revisione >= oggi, Estintore.data_revisione <= data_limite),
+                    and_(Estintore.data_collaudo >= oggi, Estintore.data_collaudo <= data_limite)
+                ))
+            elif periodo == 'prossimi180':
+                data_limite = oggi + timedelta(days=180)
+                query = query.filter(or_(
+                    and_(Estintore.data_controllo >= oggi, Estintore.data_controllo <= data_limite),
+                    and_(Estintore.data_revisione >= oggi, Estintore.data_revisione <= data_limite),
+                    and_(Estintore.data_collaudo >= oggi, Estintore.data_collaudo <= data_limite)
+                ))
+        else:
+            # Applica il filtro per tipo di scadenza
+            if tipo_scadenza == 'controllo':
+                data_campo = Estintore.data_controllo
+            elif tipo_scadenza == 'revisione':
+                data_campo = Estintore.data_revisione
+            elif tipo_scadenza == 'collaudo':
+                data_campo = Estintore.data_collaudo
+            
+            if periodo == 'scaduti':
+                query = query.filter(data_campo < oggi)
+            elif periodo == 'prossimi30':
+                data_limite = oggi + timedelta(days=30)
+                query = query.filter(and_(data_campo >= oggi, data_campo <= data_limite))
+            elif periodo == 'prossimi60':
+                data_limite = oggi + timedelta(days=60)
+                query = query.filter(and_(data_campo >= oggi, data_campo <= data_limite))
+            elif periodo == 'prossimi90':
+                data_limite = oggi + timedelta(days=90)
+                query = query.filter(and_(data_campo >= oggi, data_campo <= data_limite))
+            elif periodo == 'prossimi180':
+                data_limite = oggi + timedelta(days=180)
+                query = query.filter(and_(data_campo >= oggi, data_campo <= data_limite))
+    
+    # Se è specificata solo una data, usa quella come filtro
+    elif data_inizio:
+        if tipo_scadenza == 'tutto':
+            query = query.filter(or_(
+                Estintore.data_controllo >= data_inizio,
+                Estintore.data_revisione >= data_inizio,
+                Estintore.data_collaudo >= data_inizio
+            ))
+        else:
+            # Applica il filtro per tipo di scadenza
+            if tipo_scadenza == 'controllo':
+                data_campo = Estintore.data_controllo
+            elif tipo_scadenza == 'revisione':
+                data_campo = Estintore.data_revisione
+            elif tipo_scadenza == 'collaudo':
+                data_campo = Estintore.data_collaudo
+            
+            query = query.filter(data_campo >= data_inizio)
+    
+    elif data_fine:
+        if tipo_scadenza == 'tutto':
+            query = query.filter(or_(
+                Estintore.data_controllo <= data_fine,
+                Estintore.data_revisione <= data_fine,
+                Estintore.data_collaudo <= data_fine
+            ))
+        else:
+            # Applica il filtro per tipo di scadenza
+            if tipo_scadenza == 'controllo':
+                data_campo = Estintore.data_controllo
+            elif tipo_scadenza == 'revisione':
+                data_campo = Estintore.data_revisione
+            elif tipo_scadenza == 'collaudo':
+                data_campo = Estintore.data_collaudo
+                
+            query = query.filter(data_campo <= data_fine)
+    
+    # Ordinamento
+    # Per il tipo "tutto", ordiniamo per la data più vicina tra le tre
+    if tipo_scadenza == 'tutto':
+        # SQLite non supporta direttamente LEAST(), quindi usiamo ORDER BY multiple
+        # Per database più avanzati, potresti usare una funzione LEAST() o simile
+        query = query.order_by(Estintore.data_controllo.asc(), 
+                              Estintore.data_revisione.asc(), 
+                              Estintore.data_collaudo.asc())
+    else:
+        # Applica il filtro per tipo di scadenza
+        if tipo_scadenza == 'controllo':
+            data_campo = Estintore.data_controllo
+        elif tipo_scadenza == 'revisione':
+            data_campo = Estintore.data_revisione
+        elif tipo_scadenza == 'collaudo':
+            data_campo = Estintore.data_collaudo
+            
+        # Ordina prima per la data specifica di scadenza e poi per data di creazione
+        query = query.order_by(data_campo.asc(), Estintore.created_at.asc())
+    
+    # Paginazione
+    estintori = query.paginate(page=page, per_page=per_page)
+    
+    # Ottieni il cliente se filtrato
+    cliente_filtrato = None
+    if cliente_id:
+        cliente_filtrato = Cliente.query.get_or_404(cliente_id)
+    
+    # Ottieni tutti i clienti per il filtro
+    clienti = Cliente.query.order_by(Cliente.azienda).all()
+    
+    # Ottieni tutte le zone per il filtro
+    zone = db.session.query(Cliente.zona).distinct().order_by(Cliente.zona).all()
+    
+    return render_template('estintori/scadenze.html', 
+                          estintori=estintori,
+                          periodo=periodo,
+                          cliente_id=cliente_id,
+                          cliente_filtrato=cliente_filtrato,
+                          clienti=clienti,
+                          tipo_scadenza=tipo_scadenza,
+                          tipo_cliente=tipo_cliente,
+                          zona=zona,
+                          zone=zone,
+                          oggi=oggi,
+                          data_inizio=data_inizio_str,
+                          data_fine=data_fine_str)

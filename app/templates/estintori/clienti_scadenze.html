@@ -1,0 +1,95 @@
+<button class="list-group-item list-group-item-action" data-bs-toggle="collapse" data-bs-target="#collapseScadenzePersonalizzato">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">Report Scadenze Personalizzato</h5>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <p class="mb-1 text-muted">Genera un report personalizzato per le scadenze con intervallo di date</p>
+          </button>
+          <div class="collapse" id="collapseScadenzePersonalizzato">
+            <div class="card card-body border-top-0">
+              <form action="{{ url_for('estintori.report') }}" method="GET" target="_blank" id="scadenzeForm">
+                <input type="hidden" name="tipo" value="clienti_scadenze_custom">
+                
+                <div class="mb-3">
+                  <label class="form-label">Intervallo date</label>
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <label class="form-label small">Data inizio</label>
+                      <input type="date" name="data_inizio" class="form-control" required>
+                    </div>
+                    <div class="col-6">
+                      <label class="form-label small">Data fine</label>
+                      <input type="date" name="data_fine" class="form-control" required>
+                    </div>
+                  </div>
+                  <div class="form-text">
+                    <i class="fas fa-info-circle me-1"></i> 
+                    Seleziona l'intervallo di date per cui vuoi controllare le scadenze
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Tipo Scadenza</label>
+                  <select name="tipo_scadenza" class="form-select">
+                    <option value="tutto">Tutte le scadenze</option>
+                    <option value="controllo">Solo controllo</option>
+                    <option value="revisione">Solo revisione</option>
+                    <option value="collaudo">Solo collaudo</option>
+                  </select>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Cliente (opzionale)</label>
+                  <select name="cliente_id" class="form-select">
+                    <option value="">Tutti i clienti</option>
+                    {% for cliente in clienti %}
+                      <option value="{{ cliente.id }}">{{ cliente.azienda }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Stato cliente (opzionale)</label>
+                  <select name="tipo_cliente" class="form-select">
+                    <option value="tutti">Tutti i tipi</option>
+                    <option value="Fisso">Fisso</option>
+                    <option value="Stagionale">Stagionale</option>
+                    <option value="Occasionale">Occasionale</option>
+                    <option value="Cessato">Cessato</option>
+                  </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-file-pdf me-1"></i> Genera Report
+                </button>
+              </form>
+              
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  // Imposta le date di default
+                  const oggi = new Date();
+                  const dataInizio = document.querySelector('input[name="data_inizio"]');
+                  const dataFine = document.querySelector('input[name="data_fine"]');
+                  
+                  // Imposta data inizio = oggi
+                  dataInizio.valueAsDate = oggi;
+                  
+                  // Imposta data fine = oggi + 30 giorni
+                  const dataFinePredefinita = new Date(oggi);
+                  dataFinePredefinita.setDate(dataFinePredefinita.getDate() + 30);
+                  dataFine.valueAsDate = dataFinePredefinita;
+                  
+                  // Validazione form
+                  document.getElementById('scadenzeForm').addEventListener('submit', function(event) {
+                    const inizio = new Date(dataInizio.value);
+                    const fine = new Date(dataFine.value);
+                    
+                    if (inizio > fine) {
+                      event.preventDefault();
+                      alert('La data di inizio non può essere successiva alla data di fine');
+                    }
+                  });
+                });
+              </script>
+            </div>
+          </div>

@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - GEAM{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block page_actions %}
+
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <i class="fas fa-building fa-3x"></i>
+                    </div>
+                    <div class="col-9 text-end">
+                        <div class="huge">{{ total_clienti }}</div>
+                        <div>Clienti Totali</div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('clienti.index') }}" class="card-footer text-white clearfix small z-1 text-decoration-none">
+                <span class="float-start">Mostra Dettagli</span>
+                <span class="float-end"><i class="fas fa-angle-right"></i></span>
+            </a>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <i class="fas fa-fire-extinguisher fa-3x"></i>
+                    </div>
+                    <div class="col-9 text-end">
+                        <div class="huge">{{ total_estintori }}</div>
+                        <div>Estintori Totali</div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('estintori.index') }}" class="card-footer text-white clearfix small z-1 text-decoration-none">
+                <span class="float-start">Mostra Dettagli</span>
+                <span class="float-end"><i class="fas fa-angle-right"></i></span>
+            </a>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card text-white {{ 'bg-danger' if estintori_scaduti > 0 else 'bg-warning' }}">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <i class="fas fa-calendar-alt fa-3x"></i>
+                    </div>
+                    <div class="col-9 text-end">
+                        <div class="huge">{{ estintori_in_scadenza + estintori_scaduti }}</div>
+                        <div>{{ estintori_scaduti }} Scaduti / {{ estintori_in_scadenza }} In Scadenza</div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('estintori.scadenze') }}" class="card-footer text-white clearfix small z-1 text-decoration-none">
+                <span class="float-start">Mostra Dettagli</span>
+                <span class="float-end"><i class="fas fa-angle-right"></i></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-fire-extinguisher me-1"></i>
+                Estintori per Tipologia
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tipologia</th>
+                                <th class="text-end">Numero</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tipo, conteggio in estintori_per_tipologia %}
+                            <tr>
+                                <td>{{ tipo }}</td>
+                                <td class="text-end">{{ conteggio }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-building me-1"></i>
+                Clienti per Tipologia
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tipologia</th>
+                                <th class="text-end">Numero</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tipo, conteggio in clienti_per_tipologia %}
+                            <tr>
+                                <td>{{ tipo }}</td>
+                                <td class="text-end">{{ conteggio }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-info-circle me-1"></i>
+                Stato Estintori
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Stato</th>
+                                        <th class="text-end">Numero</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for stato, conteggio in estintori_stato %}
+                                    <tr>
+                                        <td>{{ stato }}</td>
+                                        <td class="text-end">{{ conteggio }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="alert alert-info">
+                            <h5><i class="fas fa-info-circle"></i> Riepilogo Scadenze</h5>
+                            <hr>
+                            <p><strong>Estintori scaduti:</strong> {{ estintori_scaduti }}</p>
+                            <p><strong>In scadenza nei prossimi 30 giorni:</strong> {{ estintori_in_scadenza }}</p>
+                            <a href="{{ url_for('estintori.scadenze') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-calendar-alt"></i> Gestisci Scadenze
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

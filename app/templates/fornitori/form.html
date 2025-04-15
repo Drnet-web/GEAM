@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - GEAM{% endblock %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('fornitori.index') }}" class="btn btn-secondary">
+    <i class="fas fa-arrow-left"></i> Torna alla lista
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-{% if fornitore %}edit{% else %}plus{% endif %} me-1"></i>
+        {{ title }}
+    </div>
+    <div class="card-body">
+        <form method="POST" class="needs-validation" novalidate>
+            {{ form.csrf_token }}
+            {% if form.fornitore_id %}
+                {{ form.fornitore_id }}
+            {% endif %}
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend class="fs-5 border-bottom pb-2 mb-3">Dati Aziendali</legend>
+                        
+                        <div class="mb-3">
+                            {{ form.azienda.label(class="form-label") }}
+                            {{ form.azienda(class="form-control" + (" is-invalid" if form.azienda.errors else ""), placeholder="Inserisci il nome dell'azienda", autofocus=true) }}
+                            {% for error in form.azienda.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.indirizzo.label(class="form-label") }}
+                            {{ form.indirizzo(class="form-control" + (" is-invalid" if form.indirizzo.errors else ""), placeholder="Inserisci l'indirizzo completo") }}
+                            {% for error in form.indirizzo.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                {{ form.cap.label(class="form-label") }}
+                                {{ form.cap(class="form-control" + (" is-invalid" if form.cap.errors else ""), placeholder="00000") }}
+                                {% for error in form.cap.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-8">
+                                {{ form.comune.label(class="form-label") }}
+                                {{ form.comune(class="form-control" + (" is-invalid" if form.comune.errors else ""), placeholder="Inserisci il comune") }}
+                                {% for error in form.comune.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.provincia.label(class="form-label") }}
+                            {{ form.provincia(class="form-control" + (" is-invalid" if form.provincia.errors else ""), placeholder="XX") }}
+                            {% for error in form.provincia.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                </div>
+                
+                <div class="col-md-6">
+                    <fieldset>
+                        <legend class="fs-5 border-bottom pb-2 mb-3">Contatti e Note</legend>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.telefono.label(class="form-label") }}
+                                {{ form.telefono(class="form-control" + (" is-invalid" if form.telefono.errors else ""), placeholder="Numero di telefono") }}
+                                {% for error in form.telefono.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.cellulare.label(class="form-label") }}
+                                {{ form.cellulare(class="form-control" + (" is-invalid" if form.cellulare.errors else ""), placeholder="es: 3xx1234567") }}
+                                {% for error in form.cellulare.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="nome@esempio.it", type="email") }}
+                            {% for error in form.email.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.note.label(class="form-label") }}
+                            {{ form.note(class="form-control" + (" is-invalid" if form.note.errors else ""), rows="3", placeholder="Inserisci eventuali note...") }}
+                            {% for error in form.note.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            
+            <div class="d-flex">
+                <a href="{{ url_for('fornitori.index') }}" class="btn btn-secondary me-2">
+                    <i class="fas fa-times me-1"></i> Annulla
+                </a>
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Rendi maiuscole le lettere nella provincia
+    document.addEventListener('DOMContentLoaded', function() {
+        var provinciaField = document.getElementById('provincia');
+        if (provinciaField) {
+            provinciaField.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Gestione Fornitori - GEAM{% endblock %}
+
+{% block page_title %}Gestione Fornitori{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('fornitori.nuovo') }}" class="btn btn-primary">
+    <i class="fas fa-plus"></i> Nuovo Fornitore
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-search me-1"></i>
+        Ricerca Fornitori
+    </div>
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('fornitori.index') }}" class="row g-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="search" placeholder="Cerca per azienda o comune..." value="{{ search }}">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    {% if search %}
+                    <a href="{{ url_for('fornitori.index', sort_by=sort_by, order=order) }}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="sort_by" class="form-select">
+                    <option value="azienda" {% if sort_by == 'azienda' %}selected{% endif %}>Ordina per Azienda</option>
+                    <option value="comune" {% if sort_by == 'comune' %}selected{% endif %}>Ordina per Comune</option>
+                    <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Ordina per Data Creazione</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="order" class="form-select">
+                    <option value="asc" {% if order == 'asc' %}selected{% endif %}>Crescente</option>
+                    <option value="desc" {% if order == 'desc' %}selected{% endif %}>Decrescente</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Filtri attivi -->
+{% if search %}
+<div class="alert alert-info mb-4">
+    <h5 class="mb-2"><i class="fas fa-filter me-2"></i>Filtri attivi:</h5>
+    <ul class="mb-0">
+        {% if search %}
+        <li>
+            <strong>Ricerca:</strong> 
+            <span class="badge bg-secondary">{{ search }}</span>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Elenco Fornitori
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Azienda</th>
+                        <th>Indirizzo</th>
+                        <th>Comune</th>
+                        <th>Provincia</th>
+                        <th>Contatti</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fornitore in fornitori.items %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('fornitori.visualizza', id=fornitore.id) }}" class="fw-bold text-decoration-none">
+                                {{ fornitore.azienda }}
+                            </a>
+                        </td>
+                        <td>{{ fornitore.indirizzo }}</td>
+                        <td>{{ fornitore.comune }}</td>
+                        <td>{{ fornitore.provincia }}</td>
+                        <td>
+                            {% if fornitore.telefono %}
+                                <i class="fas fa-phone text-primary me-1" title="{{ fornitore.telefono }}"></i>
+                            {% endif %}
+                            {% if fornitore.cellulare %}
+                                <i class="fas fa-mobile-alt text-success me-1" title="{{ fornitore.cellulare }}"></i>
+                            {% endif %}
+                            {% if fornitore.email %}
+                                <i class="fas fa-envelope text-info" title="{{ fornitore.email }}"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ url_for('fornitori.visualizza', id=fornitore.id) }}" class="btn btn-sm btn-info btn-icon" title="Visualizza">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ url_for('fornitori.modifica', id=fornitore.id) }}" class="btn btn-sm btn-warning btn-icon" title="Modifica">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger btn-icon" 
+                                        onclick="confermaEliminazione('{{ fornitore.azienda }}', '{{ url_for('fornitori.elimina', id=fornitore.id) }}')"
+                                        title="Elimina">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <div class="alert alert-info mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                {% if search %}
+                                    Nessun fornitore trovato per la ricerca "{{ search }}".
+                                {% else %}
+                                    Nessun fornitore registrato. <a href="{{ url_for('fornitori.nuovo') }}" class="alert-link">Aggiungi il primo fornitore</a>.
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Paginazione -->
+        {% if fornitori.pages > 1 %}
+        <nav aria-label="Paginazione fornitori">
+            <ul class="pagination justify-content-center">
+                {% for page_num in fornitori.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        {% if page_num == fornitori.page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('fornitori.index', page=page_num, search=search, sort_by=sort_by, order=order) }}">{{ page_num }}</a>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+    <div class="card-footer text-muted">
+        Mostra {{ fornitori.items|length }} fornitori 
+        {% if search %} per la ricerca "{{ search }}"{% endif %} 
+        su un totale di {{ fornitori.total }}
+    </div>
+</div>
+
+<!-- Modal di conferma eliminazione -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">Conferma Eliminazione</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Sei sicuro di voler eliminare il fornitore <strong id="nomeFornitore"></strong>?</p>
+                <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Questa operazione non può essere annullata!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                <form id="deleteForm" method="POST">
+                    <button type="submit" class="btn btn-danger">Elimina</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function confermaEliminazione(nome, url) {
+        document.getElementById('nomeFornitore').textContent = nome;
+        document.getElementById('deleteForm').action = url;
+        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        deleteModal.show();
+    }
+</script>
+{% endblock %}
