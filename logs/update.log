@@ -689,3 +689,66 @@ FileNotFoundError: [Errno 2] No such file or directory: 'C:\\GEAM\\update_cache\
 2025-04-16 08:17:00,542 [INFO] 127.0.0.1 - - [16/Apr/2025 08:17:00] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
 2025-04-16 08:18:20,451 [INFO] 127.0.0.1 - - [16/Apr/2025 08:18:20] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
 2025-04-16 08:18:25,393 [INFO] 127.0.0.1 - - [16/Apr/2025 08:18:25] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:05:12,317 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5050
+ * Running on http://192.168.1.204:5050
+2025-04-16 09:05:12,318 [INFO] [33mPress CTRL+C to quit[0m
+2025-04-16 09:05:12,322 [INFO]  * Restarting with stat
+2025-04-16 09:05:15,741 [WARNING]  * Debugger is active!
+2025-04-16 09:05:15,745 [INFO]  * Debugger PIN: 378-157-835
+2025-04-16 09:05:15,844 [INFO] 127.0.0.1 - - [16/Apr/2025 09:05:15] "GET / HTTP/1.1" 200 -
+2025-04-16 09:07:18,342 [INFO] 127.0.0.1 - - [16/Apr/2025 09:07:18] "GET / HTTP/1.1" 200 -
+2025-04-16 09:07:19,301 [INFO] 127.0.0.1 - - [16/Apr/2025 09:07:19] "GET /aggiornamenti/ HTTP/1.1" 200 -
+2025-04-16 09:07:20,881 [INFO] 127.0.0.1 - - [16/Apr/2025 09:07:20] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:07:45,033 [INFO] 127.0.0.1 - - [16/Apr/2025 09:07:45] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:07:45,827 [INFO] 127.0.0.1 - - [16/Apr/2025 09:07:45] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:07:46,709 [INFO] 127.0.0.1 - - [16/Apr/2025 09:07:46] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:08:01,818 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:01] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 09:08:02,387 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:02] "GET /aggiornamenti/ HTTP/1.1" 200 -
+2025-04-16 09:08:03,593 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:03] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:08:17,054 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:17] "GET / HTTP/1.1" 200 -
+2025-04-16 09:08:18,871 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:18] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 09:08:43,488 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:43] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 09:08:43,605 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:43] "[36mGET /static/favicon.ico HTTP/1.1[0m" 304 -
+2025-04-16 09:08:44,984 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:44] "GET /report/ HTTP/1.1" 200 -
+2025-04-16 09:08:45,097 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/estintori-tipologia HTTP/1.1" 200 -
+2025-04-16 09:08:45,152 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/estintori-zona HTTP/1.1" 200 -
+2025-04-16 09:08:45,154 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/estintori-stato HTTP/1.1" 200 -
+2025-04-16 09:08:45,169 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/clienti-zona HTTP/1.1" 200 -
+2025-04-16 09:08:45,175 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/distribuzione-capacita HTTP/1.1" 200 -
+2025-04-16 09:08:45,191 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/clienti-comune HTTP/1.1" 200 -
+2025-04-16 09:08:45,207 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/clienti-tipologia HTTP/1.1" 200 -
+2025-04-16 09:08:45,216 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/scadenze-prossime HTTP/1.1" 200 -
+2025-04-16 09:08:45,228 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/estintori-tipologia HTTP/1.1" 200 -
+2025-04-16 09:08:45,229 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/estintori-zona HTTP/1.1" 200 -
+2025-04-16 09:08:45,230 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /report/api/stato-scadenze HTTP/1.1" 200 -
+2025-04-16 09:08:45,472 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:45] "GET /aggiornamenti/ HTTP/1.1" 200 -
+2025-04-16 09:08:46,514 [INFO] 127.0.0.1 - - [16/Apr/2025 09:08:46] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:09:34,199 [INFO] 127.0.0.1 - - [16/Apr/2025 09:09:34] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:09:35,304 [INFO] 127.0.0.1 - - [16/Apr/2025 09:09:35] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 09:09:35,855 [INFO] 127.0.0.1 - - [16/Apr/2025 09:09:35] "GET /aggiornamenti/ HTTP/1.1" 200 -
+2025-04-16 09:09:36,995 [INFO] 127.0.0.1 - - [16/Apr/2025 09:09:36] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:09:39,481 [INFO] 127.0.0.1 - - [16/Apr/2025 09:09:39] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:09:56,167 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5050
+ * Running on http://192.168.1.204:5050
+2025-04-16 09:09:56,167 [INFO] [33mPress CTRL+C to quit[0m
+2025-04-16 09:09:56,171 [INFO]  * Restarting with stat
+2025-04-16 09:09:58,493 [WARNING]  * Debugger is active!
+2025-04-16 09:09:58,498 [INFO]  * Debugger PIN: 378-157-835
+2025-04-16 09:09:58,654 [INFO] 127.0.0.1 - - [16/Apr/2025 09:09:58] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:11:06,752 [INFO] 127.0.0.1 - - [16/Apr/2025 09:11:06] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:11:39,118 [INFO] 127.0.0.1 - - [16/Apr/2025 09:11:39] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:12:41,969 [INFO] 127.0.0.1 - - [16/Apr/2025 09:12:41] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:13:11,999 [INFO] 127.0.0.1 - - [16/Apr/2025 09:13:11] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 09:13:12,682 [INFO] 127.0.0.1 - - [16/Apr/2025 09:13:12] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 10:41:16,268 [INFO] 127.0.0.1 - - [16/Apr/2025 10:41:16] "GET / HTTP/1.1" 200 -
+2025-04-16 10:41:17,526 [INFO] 127.0.0.1 - - [16/Apr/2025 10:41:17] "GET /aggiornamenti/ HTTP/1.1" 200 -
+2025-04-16 10:41:19,014 [INFO] 127.0.0.1 - - [16/Apr/2025 10:41:19] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 10:47:39,459 [INFO] 127.0.0.1 - - [16/Apr/2025 10:47:39] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 10:47:42,503 [INFO] 127.0.0.1 - - [16/Apr/2025 10:47:42] "[32mPOST /impostazioni/versione/incrementa HTTP/1.1[0m" 302 -
+2025-04-16 10:47:42,536 [INFO] 127.0.0.1 - - [16/Apr/2025 10:47:42] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 10:47:44,187 [INFO] 127.0.0.1 - - [16/Apr/2025 10:47:44] "GET /aggiornamenti/ HTTP/1.1" 200 -
+2025-04-16 10:47:45,599 [INFO] 127.0.0.1 - - [16/Apr/2025 10:47:45] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
