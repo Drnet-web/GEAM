@@ -125,6 +125,19 @@ def download_release():
         return jsonify({'success': False, 'message': str(e)})
     finally:
         clear_update_flag()
+        
+def zip_selected_folders(zip_path, folders):
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+        for folder in folders:
+            abs_folder = os.path.join(BASE_PATH, folder)
+            for root, dirs, files in os.walk(abs_folder):
+                for file in files:
+                    if file.endswith('.sqlite') or file.endswith('.zip'):
+                        continue
+                    full_path = os.path.join(root, file)
+                    rel_path = os.path.relpath(full_path, BASE_PATH)
+                    zf.write(full_path, rel_path)
+
 
 @aggiornamenti_bp.route('/installa-release')
 def installa_release():
@@ -163,7 +176,8 @@ def installa_release():
         backup_zip = os.path.join(BACKUP_PATH, f"backup_GEAM_{timestamp}.zip")
         logging.info(f"Creo backup: {backup_zip}")
 
-        shutil.make_archive(backup_zip.replace('.zip', ''), 'zip', BASE_PATH)
+        zip_selected_folders(backup_zip, ['app', 'templates', 'instance'])
+
         logging.info("Backup creato correttamente.")
 
         for root, dirs, files in os.walk(source_path):
