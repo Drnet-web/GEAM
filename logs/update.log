@@ -857,3 +857,63 @@ FileNotFoundError: [Errno 2] No such file or directory: 'C:\\GEAM\\update_cache\
 2025-04-16 12:11:16,579 [INFO] 127.0.0.1 - - [16/Apr/2025 12:11:16] "GET /impostazioni/ HTTP/1.1" 200 -
 2025-04-16 12:11:18,391 [INFO] 127.0.0.1 - - [16/Apr/2025 12:11:18] "[32mPOST /impostazioni/versione/incrementa HTTP/1.1[0m" 302 -
 2025-04-16 12:11:18,424 [INFO] 127.0.0.1 - - [16/Apr/2025 12:11:18] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 12:12:50,956 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5050
+ * Running on http://192.168.1.204:5050
+2025-04-16 12:12:50,956 [INFO] [33mPress CTRL+C to quit[0m
+2025-04-16 12:12:50,961 [INFO]  * Restarting with stat
+2025-04-16 12:12:54,152 [WARNING]  * Debugger is active!
+2025-04-16 12:12:54,157 [INFO]  * Debugger PIN: 378-157-835
+2025-04-16 12:12:54,321 [INFO] 127.0.0.1 - - [16/Apr/2025 12:12:54] "GET / HTTP/1.1" 200 -
+2025-04-16 12:12:54,323 [INFO] 127.0.0.1 - - [16/Apr/2025 12:12:54] "GET / HTTP/1.1" 200 -
+2025-04-16 12:12:54,572 [INFO] 127.0.0.1 - - [16/Apr/2025 12:12:54] "[36mGET /static/favicon.ico HTTP/1.1[0m" 304 -
+2025-04-16 12:12:55,573 [INFO] 127.0.0.1 - - [16/Apr/2025 12:12:55] "GET /aggiornamenti/ HTTP/1.1" 200 -
+2025-04-16 12:12:56,565 [INFO] 127.0.0.1 - - [16/Apr/2025 12:12:56] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 12:14:15,441 [INFO] 127.0.0.1 - - [16/Apr/2025 12:14:15] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 12:14:16,006 [INFO] 127.0.0.1 - - [16/Apr/2025 12:14:16] "GET /aggiornamenti/ HTTP/1.1" 200 -
+2025-04-16 12:14:17,117 [INFO] 127.0.0.1 - - [16/Apr/2025 12:14:17] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 12:14:18,215 [INFO] 127.0.0.1 - - [16/Apr/2025 12:14:18] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 12:14:20,160 [INFO] 127.0.0.1 - - [16/Apr/2025 12:14:20] "[32mPOST /impostazioni/backup/create HTTP/1.1[0m" 302 -
+2025-04-16 12:14:20,171 [INFO] 127.0.0.1 - - [16/Apr/2025 12:14:20] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 12:14:25,293 [INFO] 127.0.0.1 - - [16/Apr/2025 12:14:25] "[32mPOST /impostazioni/backup/create HTTP/1.1[0m" 302 -
+2025-04-16 12:14:25,304 [INFO] 127.0.0.1 - - [16/Apr/2025 12:14:25] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 12:15:10,209 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:10] "GET / HTTP/1.1" 200 -
+2025-04-16 12:15:11,796 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/ HTTP/1.1" 200 -
+2025-04-16 12:15:11,880 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/estintori-tipologia HTTP/1.1" 200 -
+2025-04-16 12:15:11,903 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/distribuzione-capacita HTTP/1.1" 200 -
+2025-04-16 12:15:11,905 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/estintori-stato HTTP/1.1" 200 -
+2025-04-16 12:15:11,923 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/estintori-zona HTTP/1.1" 200 -
+2025-04-16 12:15:11,939 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/clienti-zona HTTP/1.1" 200 -
+2025-04-16 12:15:11,949 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/clienti-comune HTTP/1.1" 200 -
+2025-04-16 12:15:11,956 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/clienti-tipologia HTTP/1.1" 200 -
+2025-04-16 12:15:11,966 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/scadenze-prossime HTTP/1.1" 200 -
+2025-04-16 12:15:11,974 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/stato-scadenze HTTP/1.1" 200 -
+2025-04-16 12:15:11,979 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/estintori-tipologia HTTP/1.1" 200 -
+2025-04-16 12:15:11,983 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:11] "GET /report/api/estintori-zona HTTP/1.1" 200 -
+2025-04-16 12:15:12,679 [INFO] 127.0.0.1 - - [16/Apr/2025 12:15:12] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 12:17:09,437 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5050
+ * Running on http://192.168.1.204:5050
+2025-04-16 12:17:09,438 [INFO] [33mPress CTRL+C to quit[0m
+2025-04-16 12:17:09,443 [INFO]  * Restarting with stat
+2025-04-16 12:17:13,794 [WARNING]  * Debugger is active!
+2025-04-16 12:17:13,799 [INFO]  * Debugger PIN: 378-157-835
+2025-04-16 12:17:14,011 [INFO] 127.0.0.1 - - [16/Apr/2025 12:17:14] "GET / HTTP/1.1" 200 -
+2025-04-16 12:17:17,919 [INFO] 127.0.0.1 - - [16/Apr/2025 12:17:17] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 12:17:19,863 [INFO] 127.0.0.1 - - [16/Apr/2025 12:17:19] "GET /aggiornamenti/ HTTP/1.1" 200 -
+2025-04-16 12:17:21,241 [INFO] 127.0.0.1 - - [16/Apr/2025 12:17:21] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 12:21:52,166 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5050
+ * Running on http://192.168.1.204:5050
+2025-04-16 12:21:52,167 [INFO] [33mPress CTRL+C to quit[0m
+2025-04-16 12:21:52,171 [INFO]  * Restarting with stat
+2025-04-16 12:21:55,076 [WARNING]  * Debugger is active!
+2025-04-16 12:21:55,080 [INFO]  * Debugger PIN: 378-157-835
+2025-04-16 12:21:55,183 [INFO] 127.0.0.1 - - [16/Apr/2025 12:21:55] "GET / HTTP/1.1" 200 -
+2025-04-16 12:21:55,418 [INFO] 127.0.0.1 - - [16/Apr/2025 12:21:55] "[36mGET /static/favicon.ico HTTP/1.1[0m" 304 -
+2025-04-16 12:21:56,734 [INFO] 127.0.0.1 - - [16/Apr/2025 12:21:56] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 12:21:58,404 [INFO] 127.0.0.1 - - [16/Apr/2025 12:21:58] "[32mPOST /impostazioni/versione/incrementa HTTP/1.1[0m" 302 -
+2025-04-16 12:21:58,435 [INFO] 127.0.0.1 - - [16/Apr/2025 12:21:58] "GET /impostazioni/ HTTP/1.1" 200 -
