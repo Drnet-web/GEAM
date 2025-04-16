@@ -752,3 +752,17 @@ FileNotFoundError: [Errno 2] No such file or directory: 'C:\\GEAM\\update_cache\
 2025-04-16 10:47:42,536 [INFO] 127.0.0.1 - - [16/Apr/2025 10:47:42] "GET /impostazioni/ HTTP/1.1" 200 -
 2025-04-16 10:47:44,187 [INFO] 127.0.0.1 - - [16/Apr/2025 10:47:44] "GET /aggiornamenti/ HTTP/1.1" 200 -
 2025-04-16 10:47:45,599 [INFO] 127.0.0.1 - - [16/Apr/2025 10:47:45] "GET /aggiornamenti/api/check-version HTTP/1.1" 200 -
+2025-04-16 10:50:31,208 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5050
+ * Running on http://192.168.1.204:5050
+2025-04-16 10:50:31,209 [INFO] [33mPress CTRL+C to quit[0m
+2025-04-16 10:50:31,213 [INFO]  * Restarting with stat
+2025-04-16 10:50:33,638 [WARNING]  * Debugger is active!
+2025-04-16 10:50:33,641 [INFO]  * Debugger PIN: 378-157-835
+2025-04-16 10:50:33,740 [INFO] 127.0.0.1 - - [16/Apr/2025 10:50:33] "GET / HTTP/1.1" 200 -
+2025-04-16 10:50:34,004 [INFO] 127.0.0.1 - - [16/Apr/2025 10:50:34] "[36mGET /static/favicon.ico HTTP/1.1[0m" 304 -
+2025-04-16 10:50:34,869 [INFO] 127.0.0.1 - - [16/Apr/2025 10:50:34] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 10:50:36,749 [INFO] 127.0.0.1 - - [16/Apr/2025 10:50:36] "[32mPOST /impostazioni/versione/incrementa HTTP/1.1[0m" 302 -
+2025-04-16 10:50:36,782 [INFO] 127.0.0.1 - - [16/Apr/2025 10:50:36] "GET /impostazioni/ HTTP/1.1" 200 -
+2025-04-16 10:50:38,162 [INFO] 127.0.0.1 - - [16/Apr/2025 10:50:38] "GET /aggiornamenti/ HTTP/1.1" 200 -
