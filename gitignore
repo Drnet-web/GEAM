@@ -1,0 +1,17 @@
+# DATABASE - NON COMMETTERE MAI
+instance/geam.sqlite
+
+# FLAG TEMPORANEI
+instance/update_in_progress.flag
+
+# FILE TEMPORANEI / LOGS / CACHE
+logs/
+update_cache/
+backups/
+
+# CACHE PYTHON
+__pycache__/
+*.pyc
+
+# FILE ZIP DI BACKUP O RELEASE
+*.zip
