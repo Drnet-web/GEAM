@@ -4,12 +4,6 @@
 
 {% block page_title %}
 Impostazioni
-<span class="ms-3 badge bg-primary" id="countdown">
-    <i class="fas fa-clock me-1"></i>
-    <span id="countdown-years">4</span> anni
-    <span id="countdown-days">000</span> giorni
-    <span id="countdown-time">00:00:00</span>
-</span>
 {% endblock %}
 
 {% block page_actions %}
@@ -210,44 +204,5 @@ Impostazioni
     deleteModal.show();
   }
 
-  // Countdown di 4 anni (da una data fissa)
-  document.addEventListener('DOMContentLoaded', function() {
-    // Imposta la data di inizio (oggi) e la data finale (4 anni nel futuro)
-    const startDate = new Date('2025-03-24'); // Data fissa di inizio
-    const targetDate = new Date('2025-03-24');
-    targetDate.setFullYear(targetDate.getFullYear() + 4); // Aggiungi 4 anni
-    
-    function updateCountdown() {
-      const currentDate = new Date();
-      // Se la data corrente è oltre la data finale, mostra zero
-      if (currentDate > targetDate) {
-        document.getElementById('countdown-years').textContent = "0";
-        document.getElementById('countdown-days').textContent = "000";
-        document.getElementById('countdown-time').textContent = "00:00:00";
-        return;
-      }
-      
-      const difference = targetDate - currentDate;
-      
-      // Calcola anni, giorni, ore, minuti e secondi rimanenti
-      const years = Math.floor(difference / (1000 * 60 * 60 * 24 * 365));
-      const days = Math.floor((difference % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-      
-      // Aggiorna gli elementi del countdown
-      document.getElementById('countdown-years').textContent = years;
-      document.getElementById('countdown-days').textContent = days.toString().padStart(3, '0');
-      document.getElementById('countdown-time').textContent = 
-        hours.toString().padStart(2, '0') + ':' + 
-        minutes.toString().padStart(2, '0') + ':' + 
-        seconds.toString().padStart(2, '0');
-    }
-    
-    // Aggiorna il countdown ogni secondo
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-  });
 </script>
 {% endblock %}
