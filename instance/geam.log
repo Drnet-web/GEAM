@@ -16,3 +16,11 @@ Errore nella generazione del PDF: No wkhtmltopdf executable found: "b''"
 If this file exists please check that this process can read it or you can pass path to it manually in method call, check README. Otherwise please install wkhtmltopdf - https://github.com/JazzCore/python-pdfkit/wiki/Installing-wkhtmltopdf
 Errore nella generazione del PDF: No wkhtmltopdf executable found: "b''"
 If this file exists please check that this process can read it or you can pass path to it manually in method call, check README. Otherwise please install wkhtmltopdf - https://github.com/JazzCore/python-pdfkit/wiki/Installing-wkhtmltopdf
+Parametri report: inizio=2025-04-17, fine=2025-12-17, tipo=tutto, cliente=, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.data_controllo IS NOT NULL AND estintori.data_controllo >= '2025-04-17' AND estintori.data_controllo <= '2025-12-17' OR estintori.data_revisione IS NOT NULL AND estintori.data_revisione >= '2025-04-17' AND estintori.data_revisione <= '2025-12-17' OR estintori.data_collaudo IS NOT NULL AND estintori.data_collaudo >= '2025-04-17' AND estintori.data_collaudo <= '2025-12-17'
+Estintori trovati nella query: 109
+Date di revisione uniche: 26
+Totale estintori visualizzati: 109
+Totale clienti filtrati: 10
