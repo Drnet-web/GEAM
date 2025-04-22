@@ -47,7 +47,7 @@
                             <i class="fas fa-chart-pie card-icon"></i>
                             <h5 class="card-title mb-0">Distribuzione Tipologie Estintori</h5>
                         </div>
-                        <div class="card-body chart-container" style="height: 300px;">
+                        <div class="card-body chart-container" style="height: 420px;">
                             <canvas id="chart-estintori-tipologia"></canvas>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                             <i class="fas fa-chart-bar card-icon"></i>
                             <h5 class="card-title mb-0">Estintori per Zona</h5>
                         </div>
-                        <div class="card-body chart-container" style="height: 300px;">
+                        <div class="card-body chart-container" style="height: 420px;">
                             <canvas id="chart-estintori-zona"></canvas>
                         </div>
                     </div>
@@ -169,7 +169,7 @@
                             <i class="fas fa-calendar-day card-icon"></i>
                             <h5 class="card-title mb-0">Scadenze Prossime</h5>
                         </div>
-                        <div class="card-body chart-container" style="height: 300px;">
+                        <div class="card-body chart-container" style="height: 420px;">
                             <canvas id="chart-scadenze-prossime"></canvas>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                             <i class="fas fa-check-circle card-icon"></i>
                             <h5 class="card-title mb-0">Stato delle Scadenze</h5>
                         </div>
-                        <div class="card-body chart-container" style="height: 300px;">
+                        <div class="card-body chart-container" style="height: 420px;">
                             <canvas id="chart-stato-scadenze"></canvas>
                         </div>
                     </div>
@@ -219,7 +219,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 datasets: [{
                     label: title,
                     data: values,
-                    backgroundColor: chartColors.slice(0, data.length),
+                    backgroundColor: labels.map((label, idx) => {
+						const lower = label.toLowerCase();
+						if (lower === 'polvere') return '#e74c3c';      // Rosso
+						if (lower === 'idrico') return '#3498db';       // Blu
+						return chartColors[idx % chartColors.length];   // Fallback
+					}),
+
                     borderWidth: 1
                 }]
             },
