@@ -11,6 +11,7 @@ from . import clienti
 from . import fornitori  # Importa fornitori separatamente
 from . import estintori
 from . import dashboard
+from .timeline import timeline_bp
 
 
 __all__ = ['clienti_bp', 'estintori_bp', 'dashboard_bp', 'fornitori_bp']

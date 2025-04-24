@@ -176,6 +176,11 @@
                             </a>
                         </li>
 						<li class="nav-item">
+							<a class="nav-link {% if request.endpoint and request.endpoint.startswith('timeline.') %}active{% endif %}" href="{{ url_for('timeline.index') }}" title="Timeline">
+								<i class="fas fa-stream"></i> <span class="d-none d-lg-inline">Timeline</span>
+							</a>
+						</li>
+						<li class="nav-item">
 							<a class="nav-link {% if request.endpoint and request.endpoint.startswith('impostazioni.') %}active{% endif %}" href="{{ url_for('impostazioni.index') }}" title="Impostazioni">
 								<i class="fas fa-cog"></i> <span class="d-none d-lg-inline">Impostazioni</span>
 							</a>
