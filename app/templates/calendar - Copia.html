@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}Calendario Interventi{% endblock %}
-{% block page_title %}Calendario Interventi (tutte le scadenze){% endblock %}
+{% block page_title %}Calendario Interventi{% endblock %}
 
 {% block styles %}
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
@@ -16,6 +16,11 @@
 {% block content %}
 <div class="card">
   <div class="card-body">
+    <div class="d-flex justify-content-end mb-3">
+      <a href="{{ url_for('timeline.report') }}" class="btn btn-outline-dark">
+        📄 Report Stampabile
+      </a>
+    </div>
     <div id="calendar"></div>
   </div>
 </div>
