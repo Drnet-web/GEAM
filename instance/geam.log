@@ -45,3 +45,11 @@ Estintori trovati nella query: 1
 Date di revisione uniche: 1
 Totale estintori visualizzati: 1
 Totale clienti filtrati: 1
+Parametri report: inizio=2025-04-25, fine=2025-10-31, tipo=tutto, cliente=, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.data_controllo IS NOT NULL AND estintori.data_controllo >= '2025-04-25' AND estintori.data_controllo <= '2025-10-31' OR estintori.data_revisione IS NOT NULL AND estintori.data_revisione >= '2025-04-25' AND estintori.data_revisione <= '2025-10-31' OR estintori.data_collaudo IS NOT NULL AND estintori.data_collaudo >= '2025-04-25' AND estintori.data_collaudo <= '2025-10-31'
+Estintori trovati nella query: 224
+Date di revisione uniche: 75
+Totale estintori visualizzati: 224
+Totale clienti filtrati: 37

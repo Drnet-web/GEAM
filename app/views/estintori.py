@@ -1213,7 +1213,6 @@ def generate_csv(cliente, estintori, solo_scadenze):
             giorni_controllo,
             giorni_revisione,
             giorni_collaudo,
-            estintore.stato,
             estintore.coordinate,
             estintore.note
         ]
@@ -1305,7 +1304,7 @@ def generate_pdf(cliente, estintori, solo_scadenze):
     
     # Prepara i dati per la tabella - versione ottimizzata
     data = [
-        ['P.', 'Matricola', 'Tipologia', 'Cap.', 'Dislocazione', 'D. Fabb.', 'D. Install.', 'Data Controllo', 'Data Revisione', 'Data Collaudo', 'Stato']
+        ['P.', 'Matricola', 'Tipologia', 'Cap.', 'Dislocazione', 'D. Fabb.', 'D. Install.', 'Data Controllo', 'Data Revisione', 'Data Collaudo']
     ]
     
     # Aggiungi i dati degli estintori
@@ -1337,13 +1336,12 @@ def generate_pdf(cliente, estintori, solo_scadenze):
             data_controllo,
             data_revisione,
             data_collaudo,
-            estintore.stato
         ]
         data.append(row)
     
     # Crea la tabella con larghezze colonne ottimizzate
     available_width = doc.width
-    col_widths = [
+    [
         available_width * 0.04,  # Postazione (4%)
         available_width * 0.09,  # Matricola (9%)
         available_width * 0.09,  # Tipologia (9%)
@@ -1353,13 +1351,24 @@ def generate_pdf(cliente, estintori, solo_scadenze):
         available_width * 0.06,  # Data Installazione (6%)
         available_width * 0.12,  # Data Controllo (12%)
         available_width * 0.12,  # Data Revisione (12%)
-        available_width * 0.12,  # Data Collaudo (12%)
-        available_width * 0.11   # Stato (11%)
-    ]
+        available_width * 0.12]
     
     # Assicurati che tutte le colonne abbiano almeno una larghezza minima
     min_width = 30
-    col_widths = [max(w, min_width) for w in col_widths]
+    col_widths = [
+        max(w, min_width) for w in [
+            available_width * 0.04,  # Postazione
+            available_width * 0.09,  # Matricola
+            available_width * 0.09,  # Tipologia
+            available_width * 0.05,  # Capacità
+            available_width * 0.14,  # Dislocazione
+            available_width * 0.06,  # Data Fabbricazione
+            available_width * 0.06,  # Data Installazione
+            available_width * 0.12,  # Data Controllo
+            available_width * 0.12,  # Data Revisione
+            available_width * 0.12   # Data Collaudo
+        ]
+    ]
     
     table = Table(data, colWidths=col_widths, repeatRows=1)
     
