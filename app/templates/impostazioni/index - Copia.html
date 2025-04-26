@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Impostazioni - GEAM{% endblock %}
+
+{% block page_title %}
+Impostazioni
+{% endblock %}
+
+{% block page_actions %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <!-- NUOVA SEZIONE: Gestione della versione -->
+  <div class="col-md-12 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-code-branch me-1"></i>
+        Versione Programma
+      </div>
+      <div class="card-body">
+        <p class="mb-3">
+          Gestisci la versione del programma per tenere traccia degli aggiornamenti e delle modifiche.
+        </p>
+
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <div class="card bg-light mb-3">
+              <div class="card-body text-center">
+                <h5 class="card-title">Versione attuale</h5>
+                <h2 class="mb-0 text-primary">{{ version }}</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <form action="{{ url_for('impostazioni.incrementa_versione') }}" method="POST">
+
+              <div class="mb-3">
+                <label for="changelog" class="form-label">Note aggiornamento (changelog)</label>
+                <textarea class="form-control" id="changelog" name="changelog" rows="4" placeholder="Scrivi qui le novità..."></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="level" class="form-label">Tipo incremento</label>
+                <select class="form-select" id="level" name="level" required>
+                  <option value="patch">Patch (fix piccoli)</option>
+                  <option value="minor">Minor (aggiunte leggere)</option>
+                  <option value="major">Major (grandi cambiamenti)</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-arrow-up me-1"></i> Salva nuova versione
+              </button>
+
+            </form>
+          </div>
+        </div>
+
+        {% if config and config.last_update %}
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Ultimo aggiornamento: {{ config.last_update }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Resto del contenuto (Backup e Manutenzione Database) rimane invariato -->
+  {{ super() }}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function confirmaEliminazioneBackup(nome, url) {
+    document.getElementById('nomeBackup').textContent = nome;
+    document.getElementById('deleteBackupForm').action = url;
+    var deleteModal = new bootstrap.Modal(document.getElementById('deleteBackupModal'));
+    deleteModal.show();
+  }
+</script>
+{% endblock %}

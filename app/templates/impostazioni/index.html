@@ -11,7 +11,7 @@ Impostazioni
 
 {% block content %}
 <div class="row">
-  <!-- NUOVA SEZIONE: Gestione della versione -->
+  <!-- SEZIONE: Gestione della versione -->
   <div class="col-md-12 mb-4">
     <div class="card">
       <div class="card-header">
@@ -68,10 +68,137 @@ Impostazioni
     </div>
   </div>
 
-  <!-- Resto del contenuto (Backup e Manutenzione Database) rimane invariato -->
-  {{ super() }}
+  <!-- SEZIONE: Backup Database -->
+  <div class="col-md-12 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-database me-1"></i>
+        Backup Database
+      </div>
+      <div class="card-body">
+        <p class="mb-3">
+          Crea un backup del database per preservare i tuoi dati. Il sistema manterrà automaticamente gli ultimi 14 backup.
+        </p>
+
+        <form method="POST" action="{{ url_for('impostazioni.create_backup') }}" class="mb-4">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i> Crea nuovo backup
+          </button>
+        </form>
+
+        <h5>Backup disponibili</h5>
+
+        {% if backups %}
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>Data e Ora</th>
+                <th>Nome File</th>
+                <th>Dimensione</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for backup in backups %}
+              <tr>
+                <td>{{ backup.formatted_date }}</td>
+                <td>{{ backup.filename }}</td>
+                <td>{{ backup.size_mb }} MB</td>
+                <td>
+                  <div class="btn-group">
+                    <a href="{{ url_for('impostazioni.download_backup', filename=backup.filename) }}" class="btn btn-sm btn-success btn-icon" title="Scarica">
+                      <i class="fas fa-download"></i>
+                    </a>
+                    <button type="button" class="btn btn-sm btn-danger btn-icon" 
+                            onclick="confirmaEliminazioneBackup('{{ backup.filename }}', '{{ url_for('impostazioni.delete_backup', filename=backup.filename) }}')"
+                            title="Elimina">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Non ci sono backup disponibili. Clicca su "Crea nuovo backup" per effettuare il primo backup.
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- SEZIONE: Manutenzione Database -->
+  <div class="col-md-12 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-wrench me-1"></i>
+        Manutenzione Database
+      </div>
+      <div class="card-body">
+        <p class="mb-3">
+          Strumenti per la manutenzione del database SQLite.
+        </p>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Verifica Integrità</h5>
+                <p class="card-text">Controlla l'integrità del database per identificare eventuali problemi o corruzioni.</p>
+                <form method="POST" action="{{ url_for('impostazioni.check_db') }}">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check-circle me-1"></i> Verifica Integrità
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Compattazione Database</h5>
+                <p class="card-text">Compatta il database per ridurne le dimensioni e migliorare le prestazioni.</p>
+                <form method="POST" action="{{ url_for('impostazioni.vacuum_db') }}">
+                  <button type="submit" class="btn btn-primary" onclick="return confirm('La compattazione potrebbe richiedere del tempo. Continuare?');">
+                    <i class="fas fa-compress-alt me-1"></i> Compatta Database
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- Modal di conferma eliminazione backup -->
+<div class="modal fade" id="deleteBackupModal" tabindex="-1" aria-labelledby="deleteBackupModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="deleteBackupModalLabel">Conferma Eliminazione</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Sei sicuro di voler eliminare il backup <strong id="nomeBackup"></strong>?</p>
+        <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Questa operazione non può essere annullata!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+        <form id="deleteBackupForm" method="POST">
+          <button type="submit" class="btn btn-danger">Elimina</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
