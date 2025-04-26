@@ -15,3 +15,6 @@ __pycache__/
 
 # FILE ZIP DI BACKUP O RELEASE
 *.zip
+
+# Configurazione sviluppo personale
+instance/config.json

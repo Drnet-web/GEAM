@@ -5,31 +5,16 @@ import datetime
 import sqlite3
 import shutil
 import glob
-import json
 
 # Crea il blueprint
 impostazioni_bp = Blueprint('impostazioni', __name__, url_prefix='/impostazioni')
 
-def load_config():
-    """Carica la configurazione locale (config.json)"""
-    config_path = os.path.join(current_app.instance_path, 'config.json')
-    if os.path.exists(config_path):
-        try:
-            with open(config_path, 'r') as f:
-                return json.load(f)
-        except Exception as e:
-            current_app.logger.error(f"Errore caricamento config.json: {e}")
-    return {}
-
-
 @impostazioni_bp.route('/')
 def index():
     """Pagina principale delle impostazioni"""
+    # Ottieni la lista dei backup disponibili
     backups = get_backups()
-    config = load_config()
-    is_developer = config.get('developer_mode', False)  # Prende il valore da config.json
-    return render_template('impostazioni/index.html', backups=backups, is_developer=is_developer)
-
+    return render_template('impostazioni/index.html', backups=backups)
 
 @impostazioni_bp.route('/backup/create', methods=['POST'])
 def create_backup():
