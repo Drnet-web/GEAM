@@ -2,7 +2,7 @@
     "version": {
         "major": 2,
         "minor": 6,
-        "patch": 10
+        "patch": 0
     },
-    "last_update": "2025-04-26 14:42:45"
+    "changelog": "- Sistemato problema login\n- Migliorata stabilità generale\n- Aggiunta funzione di backup manuale"
 }

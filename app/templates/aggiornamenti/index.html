@@ -74,6 +74,7 @@
           <strong>Versione installata:</strong> ${data.locale.major}.${data.locale.minor}.${data.locale.patch}<br>
           <strong>Versione disponibile:</strong> ${data.remota.major}.${data.remota.minor}.${data.remota.patch}<br>
           <strong>Aggiornamento disponibile:</strong> ${data.disponibile ? "<span class='text-success'>Sì</span>" : "No"}
+          ${data.changelog ? `<br><strong>Note di aggiornamento:</strong><br><pre>${data.changelog}</pre>` : ""}
         `;
 
         document.getElementById("downloadBtn").disabled = !data.disponibile;
