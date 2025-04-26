@@ -2,8 +2,8 @@
     "version": {
         "major": 2,
         "minor": 6,
-        "patch": 12
+        "patch": 13
     },
-    "changelog": "test",
-    "last_update": "2025-04-26 15:22:36"
+    "changelog": "Aggiornamento alla 2.6.12 fix e test",
+    "last_update": "2025-04-26 15:30:46"
 }

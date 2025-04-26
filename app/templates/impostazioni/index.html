@@ -24,8 +24,8 @@ Impostazioni
         </p>
 
         <div class="row mb-3">
-          <div class="col-md-4">
-            <div class="card bg-light">
+          <div class="col-md-12">
+            <div class="card bg-light mb-3">
               <div class="card-body text-center">
                 <h5 class="card-title">Versione attuale</h5>
                 <h2 class="mb-0 text-primary">{{ version }}</h2>
@@ -33,9 +33,14 @@ Impostazioni
             </div>
           </div>
 
-          <div class="col-md-8">
-            <p>Incrementa la versione del programma dopo aver apportato modifiche:</p>
+          <div class="col-md-12">
             <form action="{{ url_for('impostazioni.incrementa_versione') }}" method="POST">
+
+              <div class="mb-3">
+                <label for="changelog" class="form-label">Note aggiornamento (changelog)</label>
+                <textarea class="form-control" id="changelog" name="changelog" rows="4" placeholder="Scrivi qui le novità..."></textarea>
+              </div>
+
               <div class="mb-3">
                 <label for="level" class="form-label">Tipo incremento</label>
                 <select class="form-select" id="level" name="level" required>
@@ -45,14 +50,10 @@ Impostazioni
                 </select>
               </div>
 
-              <div class="mb-3">
-                <label for="changelog" class="form-label">Note aggiornamento (changelog)</label>
-                <textarea class="form-control" id="changelog" name="changelog" rows="4" placeholder="Scrivi qui le novità..."></textarea>
-              </div>
-
               <button type="submit" class="btn btn-success">
                 <i class="fas fa-arrow-up me-1"></i> Salva nuova versione
               </button>
+
             </form>
           </div>
         </div>
