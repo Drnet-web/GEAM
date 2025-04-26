@@ -62,14 +62,16 @@ def is_update_in_progress():
         try:
             creation_time = os.path.getmtime(flag_path)
             age_seconds = datetime.datetime.now().timestamp() - creation_time
-            if age_seconds > 180:
+            if age_seconds > 180:  # Se il flag ha più di 3 minuti
                 logging.warning("Flag aggiornamento trovato ma troppo vecchio. Eliminazione automatica.")
                 os.remove(flag_path)
                 return False
         except Exception as e:
             logging.error(f"Errore durante il controllo età flag: {e}")
+            return False  # In caso di errore, meglio consentire di proseguire
         return True
     return False
+
 
 def set_update_flag():
     with open(os.path.join(current_app.instance_path, 'update_in_progress.flag'), 'w') as f:
