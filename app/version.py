@@ -69,8 +69,8 @@ def get_version():
     version = config.get('version', {"major": 1, "minor": 0, "patch": 0})
     return f"{version['major']}.{version['minor']}.{version['patch']}"
 
-def increment_version(level='patch'):
-    """Incrementa la versione al livello specificato (patch, minor, major)"""
+def increment_version(level='patch', changelog=''):
+    """Incrementa la versione al livello specificato (patch, minor, major) e aggiorna il changelog"""
     
     config = load_config()
     version = config.get('version', {"major": 1, "minor": 0, "patch": 0})
@@ -87,6 +87,9 @@ def increment_version(level='patch'):
     
     config['version'] = version
     config['last_update'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    if changelog:
+        config['changelog'] = changelog.replace('\r\n', '\n')  # normalizza ritorni a capo
     
     save_config(config)
     return f"{version['major']}.{version['minor']}.{version['patch']}"

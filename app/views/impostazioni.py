@@ -183,16 +183,16 @@ def cleanup_old_backups():
                 
 @impostazioni_bp.route('/versione/incrementa', methods=['POST'])
 def incrementa_versione():
-    """Incrementa la versione del programma"""
+    """Incrementa la versione del programma e aggiorna il changelog"""
     from app.version import increment_version
     
-    # Ottieni il livello di incremento dall'input
     level = request.form.get('level', 'patch')
     if level not in ['patch', 'minor', 'major']:
         level = 'patch'
-    
-    # Incrementa la versione
-    nuova_versione = increment_version(level)
-    
+
+    changelog = request.form.get('changelog', '')  # prendiamo anche il changelog dal form
+
+    nuova_versione = increment_version(level, changelog)
+
     flash(f'Versione incrementata a {nuova_versione}', 'success')
     return redirect(url_for('impostazioni.index'))

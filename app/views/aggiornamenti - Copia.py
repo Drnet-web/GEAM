@@ -91,12 +91,24 @@ def index():
 def check_version():
     locale = get_version_local()
     remota = get_version_remote()
+    changelog = None
+
+    try:
+        response = requests.get(VERSION_JSON_URL, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            changelog = data.get('changelog')
+    except Exception as e:
+        logging.error(f"Errore recupero changelog: {e}")
+
     aggiorna = (not versioni_uguali(locale, remota)) if locale and remota else False
     return jsonify({
         'locale': locale,
         'remota': remota,
-        'disponibile': aggiorna
+        'disponibile': aggiorna,
+        'changelog': changelog
     })
+
 
 @aggiornamenti_bp.route('/api/download-release')
 def download_release():
