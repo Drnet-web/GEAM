@@ -69,6 +69,18 @@ Impostazioni
     </div>
   </div>
   {% endif %}
+{% if is_developer %}
+	<div class="mb-3">
+		<form action="{{ url_for('impostazioni.toggle_mode') }}" method="POST">
+			<button type="submit" class="btn btn-warning">
+				<i class="fas fa-exchange-alt me-1"></i> Passa a Produzione
+			</button>
+		</form>
+	</div>
+{% else %}
+<!-- Se serve, puoi anche mettere un messaggio per sviluppatore -->
+{% endif %}
+
 
   <!-- SEZIONE: Backup Database -->
   <div class="col-md-12 mb-4">

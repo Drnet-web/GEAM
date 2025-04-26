@@ -1,8 +1,9 @@
 {
-  "version": {
-    "major": 2,
-    "minor": 6,
-    "patch": 16
-  },
-  "changelog": "Fix gestione flag aggiornamento"
+    "version": {
+        "major": 2,
+        "minor": 6,
+        "patch": 17
+    },
+    "changelog": "Fix gestione flag aggiornamento",
+    "last_update": "2025-04-26 17:22:04"
 }

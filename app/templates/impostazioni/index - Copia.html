@@ -11,7 +11,8 @@ Impostazioni
 
 {% block content %}
 <div class="row">
-  <!-- SEZIONE: Gestione della versione -->
+  {% if is_developer %}
+  <!-- SEZIONE: Gestione della versione (visibile solo per sviluppatore) -->
   <div class="col-md-12 mb-4">
     <div class="card">
       <div class="card-header">
@@ -67,6 +68,7 @@ Impostazioni
       </div>
     </div>
   </div>
+  {% endif %}
 
   <!-- SEZIONE: Backup Database -->
   <div class="col-md-12 mb-4">

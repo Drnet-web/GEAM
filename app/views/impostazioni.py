@@ -211,3 +211,23 @@ def incrementa_versione():
 
     flash(f'Versione incrementata a {nuova_versione}', 'success')
     return redirect(url_for('impostazioni.index'))
+
+
+@impostazioni_bp.route('/toggle-mode', methods=['POST'])
+def toggle_mode():
+    """Alterna tra modalità sviluppatore e produzione"""
+    config_path = os.path.join(current_app.instance_path, 'config.json')
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+            current_mode = config.get('developer_mode', False)
+            config['developer_mode'] = not current_mode
+            with open(config_path, 'w') as f:
+                json.dump(config, f, indent=4)
+            flash(f"Modalità aggiornata: {'Developer' if config['developer_mode'] else 'Produzione'}", "success")
+        except Exception as e:
+            flash(f"Errore nel cambio modalità: {e}", "danger")
+    else:
+        flash("Config.json non trovato.", "danger")
+    return redirect(url_for('impostazioni.index'))
