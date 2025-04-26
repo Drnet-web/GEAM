@@ -1,9 +1,8 @@
 {
-    "version": {
-        "major": 2,
-        "minor": 6,
-        "patch": 16
-    },
-    "changelog": "implementazione modalit\u00e0 sviluppatore",
-    "last_update": "2025-04-26 16:50:56"
+  "version": {
+    "major": 2,
+    "minor": 6,
+    "patch": 16
+  },
+  "changelog": "Fix gestione flag aggiornamento"
 }
