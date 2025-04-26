@@ -2,7 +2,7 @@
     "version": {
         "major": 2,
         "minor": 6,
-        "patch": 0
+        "patch": 11
     },
     "changelog": "- Sistemato problema login\n- Migliorata stabilità generale\n- Aggiunta funzione di backup manuale"
 }
