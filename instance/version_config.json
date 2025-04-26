@@ -2,8 +2,8 @@
     "version": {
         "major": 2,
         "minor": 6,
-        "patch": 15
+        "patch": 16
     },
-    "changelog": "\"Nuova versione 2.6.14 - Fix gestione flag aggiornamento\"",
-    "last_update": "2025-04-26 16:14:45"
+    "changelog": "implementazione modalit\u00e0 sviluppatore",
+    "last_update": "2025-04-26 16:50:56"
 }
