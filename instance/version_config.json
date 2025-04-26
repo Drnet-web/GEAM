@@ -2,13 +2,7 @@
     "version": {
         "major": 2,
         "minor": 6,
-<<<<<<< HEAD
-        "patch": 6
+        "patch": 1
     },
-    "last_update": "2025-04-26 11:54:40"
-=======
-        "patch": 5
-    },
-    "last_update": "2025-04-26 09:45:02"
->>>>>>> 93f2d7bde9158b03a712fea96319ccb6a812fa1d
+    "last_update": "2025-04-24 09:48:14"
 }
