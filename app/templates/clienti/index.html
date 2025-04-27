@@ -1,7 +1,7 @@
+
 {% extends "base.html" %}
 
 {% block title %}Gestione Clienti - GEAM{% endblock %}
-
 {% block page_title %}Gestione Clienti{% endblock %}
 
 {% block page_actions %}
@@ -11,260 +11,191 @@
 {% endblock %}
 
 {% block content %}
-<!-- Nuova sezione per filtri tipologia -->
+
+<!-- Sezione filtri tipologia -->
 <div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-filter me-1"></i>
-        Filtri Clienti
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col-md-12">
-                <label class="form-label">Tipologia Cliente</label>
-                <div class="btn-group w-100" role="group">
-                    <a href="{{ url_for('clienti.index', tipologia='tutti', search=search, sort_by=sort_by, order=order) }}" class="btn btn-sm btn-outline-secondary {{ 'active' if tipologia == 'tutti' }}">
-                        Tutti
-                    </a>
-                    <a href="{{ url_for('clienti.index', tipologia='Fisso', search=search, sort_by=sort_by, order=order) }}" class="btn btn-sm btn-outline-primary {{ 'active' if tipologia == 'Fisso' }}">
-                        Fisso
-                    </a>
-                    <a href="{{ url_for('clienti.index', tipologia='Stagionale', search=search, sort_by=sort_by, order=order) }}" class="btn btn-sm btn-outline-success {{ 'active' if tipologia == 'Stagionale' }}">
-                        Stagionale
-                    </a>
-                    <a href="{{ url_for('clienti.index', tipologia='Occasionale', search=search, sort_by=sort_by, order=order) }}" class="btn btn-sm btn-outline-warning {{ 'active' if tipologia == 'Occasionale' }}">
-                        Occasionale
-                    </a>
-                    <a href="{{ url_for('clienti.index', tipologia='Cessato', search=search, sort_by=sort_by, order=order) }}" class="btn btn-sm btn-outline-danger {{ 'active' if tipologia == 'Cessato' }}">
-                        Cessato
-                    </a>
-                </div>
-            </div>
+  <div class="card-header"><i class="fas fa-filter me-1"></i> Filtri Clienti</div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12">
+        <label class="form-label">Tipologia Cliente</label>
+        <div class="btn-group w-100" role="group">
+          {% set senza = ('on' if solo_senza_estintori else '') %}
+          <a href="{{ url_for('clienti.index', tipologia='tutti', search=search, sort_by=sort_by, order=order, solo_senza_estintori=senza) }}"
+             class="btn btn-sm btn-outline-secondary {{ 'active' if tipologia == 'tutti' }}">
+            Tutti
+          </a>
+          <a href="{{ url_for('clienti.index', tipologia='Fisso', search=search, sort_by=sort_by, order=order, solo_senza_estintori=senza) }}"
+             class="btn btn-sm btn-outline-primary {{ 'active' if tipologia == 'Fisso' }}">
+            Fisso
+          </a>
+          <a href="{{ url_for('clienti.index', tipologia='Stagionale', search=search, sort_by=sort_by, order=order, solo_senza_estintori=senza) }}"
+             class="btn btn-sm btn-outline-success {{ 'active' if tipologia == 'Stagionale' }}">
+            Stagionale
+          </a>
+          <a href="{{ url_for('clienti.index', tipologia='Occasionale', search=search, sort_by=sort_by, order=order, solo_senza_estintori=senza) }}"
+             class="btn btn-sm btn-outline-warning {{ 'active' if tipologia == 'Occasionale' }}">
+            Occasionale
+          </a>
+          <a href="{{ url_for('clienti.index', tipologia='Cessato', search=search, sort_by=sort_by, order=order, solo_senza_estintori=senza) }}"
+             class="btn btn-sm btn-outline-danger {{ 'active' if tipologia == 'Cessato' }}">
+            Cessato
+          </a>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
+<!-- Sezione ricerca e ordinamento -->
 <div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-search me-1"></i>
-        Ricerca Clienti
-    </div>
-    <div class="card-body">
-        <form method="GET" action="{{ url_for('clienti.index') }}" class="row g-3">
-            <div class="col-md-6">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="search" placeholder="Cerca per azienda, comune o zona..." value="{{ search }}">
-                    <button class="btn btn-primary" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    {% if search %}
-                    <a href="{{ url_for('clienti.index', tipologia=tipologia, sort_by=sort_by, order=order) }}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i>
-                    </a>
-                    {% endif %}
-                </div>
-                <!-- Campo nascosto per mantenere il filtro tipologia -->
-                <input type="hidden" name="tipologia" value="{{ tipologia }}">
-            </div>
-            <div class="col-md-3">
-                <select name="sort_by" class="form-select">
-                    <option value="azienda" {% if sort_by == 'azienda' %}selected{% endif %}>Ordina per Azienda</option>
-                    <option value="comune" {% if sort_by == 'comune' %}selected{% endif %}>Ordina per Comune</option>
-                    <option value="tipologia" {% if sort_by == 'tipologia' %}selected{% endif %}>Ordina per Tipologia</option>
-                    <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Ordina per Data Creazione</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select name="order" class="form-select">
-                    <option value="asc" {% if order == 'asc' %}selected{% endif %}>Crescente</option>
-                    <option value="desc" {% if order == 'desc' %}selected{% endif %}>Decrescente</option>
-                </select>
-            </div>
-        </form>
-    </div>
+  <div class="card-header"><i class="fas fa-search me-1"></i> Ricerca Clienti</div>
+  <div class="card-body">
+    <form method="GET" action="{{ url_for('clienti.index') }}" class="row g-3">
+      <div class="col-md-6">
+        <div class="input-group">
+          <input type="text" class="form-control" name="search" placeholder="Cerca per azienda, comune o zona..." value="{{ search }}">
+          <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+          {% if search %}
+          <a href="{{ url_for('clienti.index', tipologia=tipologia, sort_by=sort_by, order=order, solo_senza_estintori=('on' if solo_senza_estintori else '')) }}" class="btn btn-secondary">
+            <i class="fas fa-times"></i>
+          </a>
+          {% endif %}
+        </div>
+        <input type="hidden" name="tipologia" value="{{ tipologia }}">
+      </div>
+
+      <div class="col-md-3">
+        <select name="sort_by" class="form-select">
+          <option value="azienda" {% if sort_by == 'azienda' %}selected{% endif %}>Azienda</option>
+          <option value="comune" {% if sort_by == 'comune' %}selected{% endif %}>Comune</option>
+          <option value="tipologia" {% if sort_by == 'tipologia' %}selected{% endif %}>Tipologia</option>
+          <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Data Creazione</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="order" class="form-select">
+          <option value="asc" {% if order == 'asc' %}selected{% endif %}>Crescente</option>
+          <option value="desc" {% if order == 'desc' %}selected{% endif %}>Decrescente</option>
+        </select>
+      </div>
+
+      <!-- Checkbox senza estintori -->
+      <div class="col-md-12 col-lg-3 align-self-end">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="chkSenza" name="solo_senza_estintori" value="on"
+                 {% if solo_senza_estintori %}checked{% endif %}>
+          <label class="form-check-label fw-bold" for="chkSenza">
+            Solo clienti senza estintori
+          </label>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
 
-<!-- Filtri attivi -->
-{% if tipologia != 'tutti' or search %}
-<div class="alert alert-info mb-4">
-    <h5 class="mb-2"><i class="fas fa-filter me-2"></i>Filtri attivi:</h5>
-    <ul class="mb-0">
-        {% if tipologia != 'tutti' %}
-        <li>
-            <strong>Tipologia Cliente:</strong> 
-            {% if tipologia == 'Fisso' %}
-                <span class="badge bg-primary">{{ tipologia }}</span>
-            {% elif tipologia == 'Stagionale' %}
-                <span class="badge bg-success">{{ tipologia }}</span>
-            {% elif tipologia == 'Occasionale' %}
-                <span class="badge bg-warning">{{ tipologia }}</span>
-            {% elif tipologia == 'Cessato' %}
-                <span class="badge bg-danger">{{ tipologia }}</span>
+<!-- Tabella clienti -->
+<div class="card mb-4">
+  <div class="card-header"><i class="fas fa-table me-1"></i> Elenco Clienti</div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Azienda</th>
+            <th>Indirizzo</th>
+            <th>Comune</th>
+            <th>Provincia</th>
+            <th>Tipologia</th>
+            <th>Contatti</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cliente in clienti.items %}
+          <tr>
+            <td>
+              <a href="{{ url_for('clienti.visualizza', id=cliente.id) }}" class="fw-bold text-decoration-none">{{ cliente.azienda }}</a>
+            </td>
+            <td>{{ cliente.indirizzo }}</td>
+            <td>{{ cliente.comune }}</td>
+            <td>{{ cliente.provincia }}</td>
+            <td>
+              {% if cliente.tipologia == 'Fisso' %}
+              <span class="badge bg-primary">{{ cliente.tipologia }}</span>
+              {% elif cliente.tipologia == 'Stagionale' %}
+              <span class="badge bg-success">{{ cliente.tipologia }}</span>
+              {% elif cliente.tipologia == 'Occasionale' %}
+              <span class="badge bg-warning">{{ cliente.tipologia }}</span>
+              {% else %}
+              <span class="badge bg-danger">{{ cliente.tipologia }}</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if cliente.telefono %}<i class="fas fa-phone text-primary me-1" title="{{ cliente.telefono }}"></i>{% endif %}
+              {% if cliente.cellulare %}<i class="fas fa-mobile-alt text-success me-1" title="{{ cliente.cellulare }}"></i>{% endif %}
+              {% if cliente.email %}<i class="fas fa-envelope text-info" title="{{ cliente.email }}"></i>{% endif %}
+            </td>
+            <td>
+              <div class="btn-group">
+                <a href="{{ url_for('clienti.visualizza', id=cliente.id) }}" class="btn btn-sm btn-info btn-icon" title="Visualizza"><i class="fas fa-eye"></i></a>
+                <a href="{{ url_for('clienti.modifica', id=cliente.id) }}" class="btn btn-sm btn-warning btn-icon" title="Modifica"><i class="fas fa-edit"></i></a>
+                <button type="button" class="btn btn-sm btn-danger btn-icon"
+                        onclick="confermaEliminazione('{{ cliente.azienda }}', '{{ url_for('clienti.elimina', id=cliente.id) }}')" title="Elimina">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" class="text-center py-4">
+              <div class="alert alert-info mb-0">
+                <i class="fas fa-info-circle me-2"></i>
+                {% if tipologia != 'tutti' and search %}
+                  Nessun cliente trovato di tipo "{{ tipologia }}" per la ricerca "{{ search }}".
+                {% elif tipologia != 'tutti' %}
+                  Nessun cliente trovato di tipo "{{ tipologia }}".
+                {% elif search %}
+                  Nessun cliente trovato per la ricerca "{{ search }}".
+                {% else %}
+                  Nessun cliente registrato. <a href="{{ url_for('clienti.nuovo') }}" class="alert-link">Aggiungi il primo cliente</a>.
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginazione -->
+    {% if clienti.pages > 1 %}
+    <nav aria-label="Paginazione clienti">
+      <ul class="pagination justify-content-center">
+        {% for page_num in clienti.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if page_num %}
+            {% if page_num == clienti.page %}
+            <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+            {% else %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for('clienti.index', page=page_num, search=search, sort_by=sort_by, order=order, tipologia=tipologia, solo_senza_estintori=senza) }}">{{ page_num }}</a>
+            </li>
             {% endif %}
-        </li>
-        {% endif %}
-        {% if search %}
-        <li>
-            <strong>Ricerca:</strong> 
-            <span class="badge bg-secondary">{{ search }}</span>
-        </li>
-        {% endif %}
-    </ul>
-</div>
-{% endif %}
-
-<div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-table me-1"></i>
-        Elenco Clienti
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Azienda</th>
-                        <th>Indirizzo</th>
-                        <th>Comune</th>
-                        <th>Provincia</th>
-                        <th>Tipologia</th>
-                        <th>Contatti</th>
-                        <th>Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cliente in clienti.items %}
-                    <tr>
-                        <td>
-                            <a href="{{ url_for('clienti.visualizza', id=cliente.id) }}" class="fw-bold text-decoration-none">
-                                {{ cliente.azienda }}
-                            </a>
-                        </td>
-                        <td>{{ cliente.indirizzo }}</td>
-                        <td>{{ cliente.comune }}</td>
-                        <td>{{ cliente.provincia }}</td>
-                        <td>
-                            {% if cliente.tipologia == 'Fisso' %}
-                                <span class="badge bg-primary">{{ cliente.tipologia }}</span>
-                            {% elif cliente.tipologia == 'Stagionale' %}
-                                <span class="badge bg-success">{{ cliente.tipologia }}</span>
-                            {% elif cliente.tipologia == 'Occasionale' %}
-                                <span class="badge bg-warning">{{ cliente.tipologia }}</span>
-                            {% else %}
-                                <span class="badge bg-danger">{{ cliente.tipologia }}</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if cliente.telefono %}
-                                <i class="fas fa-phone text-primary me-1" title="{{ cliente.telefono }}"></i>
-                            {% endif %}
-                            {% if cliente.cellulare %}
-                                <i class="fas fa-mobile-alt text-success me-1" title="{{ cliente.cellulare }}"></i>
-                            {% endif %}
-                            {% if cliente.email %}
-                                <i class="fas fa-envelope text-info" title="{{ cliente.email }}"></i>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <div class="btn-group">
-                                <a href="{{ url_for('clienti.visualizza', id=cliente.id) }}" class="btn btn-sm btn-info btn-icon" title="Visualizza">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ url_for('clienti.modifica', id=cliente.id) }}" class="btn btn-sm btn-warning btn-icon" title="Modifica">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <button type="button" class="btn btn-sm btn-danger btn-icon" 
-                                        onclick="confermaEliminazione('{{ cliente.azienda }}', '{{ url_for('clienti.elimina', id=cliente.id) }}')"
-                                        title="Elimina">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="7" class="text-center py-4">
-                            <div class="alert alert-info mb-0">
-                                <i class="fas fa-info-circle me-2"></i>
-                                {% if tipologia != 'tutti' and search %}
-                                    Nessun cliente trovato di tipo "{{ tipologia }}" per la ricerca "{{ search }}".
-                                {% elif tipologia != 'tutti' %}
-                                    Nessun cliente trovato di tipo "{{ tipologia }}".
-                                {% elif search %}
-                                    Nessun cliente trovato per la ricerca "{{ search }}".
-                                {% else %}
-                                    Nessun cliente registrato. <a href="{{ url_for('clienti.nuovo') }}" class="alert-link">Aggiungi il primo cliente</a>.
-                                {% endif %}
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Paginazione -->
-        {% if clienti.pages > 1 %}
-        <nav aria-label="Paginazione clienti">
-            <ul class="pagination justify-content-center">
-                {% for page_num in clienti.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-                    {% if page_num %}
-                        {% if page_num == clienti.page %}
-                        <li class="page-item active">
-                            <span class="page-link">{{ page_num }}</span>
-                        </li>
-                        {% else %}
-                        <li class="page-item">
-                            <a class="page-link" href="{{ url_for('clienti.index', page=page_num, search=search, sort_by=sort_by, order=order, tipologia=tipologia) }}">{{ page_num }}</a>
-                        </li>
-                        {% endif %}
-                    {% else %}
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </nav>
-        {% endif %}
-    </div>
-    <div class="card-footer text-muted">
-        Mostra {{ clienti.items|length }} clienti 
-        {% if tipologia != 'tutti' %}di tipo "{{ tipologia }}"{% endif %}
-        {% if search %} per la ricerca "{{ search }}"{% endif %} 
-        su un totale di {{ clienti.total }}
-    </div>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+  <div class="card-footer text-muted">
+    Mostra {{ clienti.items|length }} clienti
+    {% if tipologia != 'tutti' %}di tipo "{{ tipologia }}"{% endif %}
+    {% if search %} per la ricerca "{{ search }}"{% endif %}
+    su un totale di {{ clienti.total }}
+  </div>
 </div>
 
-<!-- Modal di conferma eliminazione -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel">Conferma Eliminazione</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Sei sicuro di voler eliminare il cliente <strong id="nomeCliente"></strong>?</p>
-                <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Questa operazione non può essere annullata!</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-                <form id="deleteForm" method="POST">
-                    <button type="submit" class="btn btn-danger">Elimina</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-    function confermaEliminazione(nome, url) {
-        document.getElementById('nomeCliente').textContent = nome;
-        document.getElementById('deleteForm').action = url;
-        var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        deleteModal.show();
-    }
-</script>
 {% endblock %}

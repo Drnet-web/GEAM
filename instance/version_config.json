@@ -2,8 +2,8 @@
     "version": {
         "major": 2,
         "minor": 6,
-        "patch": 17
+        "patch": 19
     },
-    "changelog": "Fix gestione flag aggiornamento",
-    "last_update": "2025-04-26 17:22:04"
+    "changelog": "Aggiunto checkbox nel form clienti per ricerca senza estintori",
+    "last_update": "2025-04-27 17:58:41"
 }
