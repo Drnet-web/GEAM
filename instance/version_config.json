@@ -2,8 +2,8 @@
     "version": {
         "major": 2,
         "minor": 6,
-        "patch": 20
+        "patch": 21
     },
-    "changelog": "Modifiche al form impostazioni",
-    "last_update": "2025-04-27 20:44:09"
+    "changelog": "modifica inclusiva del file json da gitgnore, perch\u00e8 messa password per cambio da sviluppo a produzione",
+    "last_update": "2025-04-27 20:50:20"
 }
