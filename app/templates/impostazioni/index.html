@@ -26,14 +26,14 @@
           </div>
           <form action="{{ url_for('impostazioni.incrementa_versione') }}" method="POST">
             <label class="form-label small mb-1">Changelog</label>
-            <textarea name="changelog" rows="3" class="form-control mb-2"></textarea>
+            <textarea name="changelog" id="changelogArea" required rows="3" class="form-control mb-2"></textarea>
             <label class="form-label small mb-1">Tipo incremento</label>
             <select name="level" class="form-select mb-3" required>
               <option value="patch">Patch</option>
               <option value="minor">Minor</option>
               <option value="major">Major</option>
             </select>
-            <button class="btn btn-success btn-sm"><i class="fas fa-arrow-up me-1"></i> Salva</button>
+            <button id="saveBtn" class="btn btn-success btn-sm" disabled><i class="fas fa-arrow-up me-1"></i> Salva</button>
           </form>
         </div>
       </div>
@@ -155,4 +155,18 @@
     </form>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+ const ta=document.getElementById('changelogArea');
+ const btn=document.getElementById('saveBtn');
+ if(!ta||!btn) return;
+ const toggle=()=>{btn.disabled = ta.value.trim()==='';};
+ ta.addEventListener('input', toggle);
+ toggle();
+});
+</script>
 {% endblock %}
