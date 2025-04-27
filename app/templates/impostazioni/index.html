@@ -1,227 +1,158 @@
 {% extends "base.html" %}
-
 {% block title %}Impostazioni - GEAM{% endblock %}
-
-{% block page_title %}
-Impostazioni
-{% endblock %}
-
-{% block page_actions %}
-{% endblock %}
+{% block page_title %}Impostazioni{% endblock %}
 
 {% block content %}
-<div class="row">
+<div id="accordionTools" class="row gx-3 gy-3">
+
+  {# VERSIONE PROGRAMMA (solo dev) #}
   {% if is_developer %}
-  <!-- SEZIONE: Gestione della versione (visibile solo per sviluppatore) -->
-  <div class="col-md-12 mb-4">
+  <div class="col-12 col-lg-6 mb-4">
     <div class="card">
-      <div class="card-header">
-        <i class="fas fa-code-branch me-1"></i>
-        Versione Programma
+      <div class="card-header p-2">
+        <h6 class="mb-0">
+          <a class="text-decoration-none d-flex align-items-center" data-bs-toggle="collapse"
+             href="#verCollapse" role="button" aria-expanded="true" aria-controls="verCollapse">
+            <i class="fas fa-code-branch me-2"></i> Versione Programma
+            <i class="fas fa-chevron-down ms-auto small"></i>
+          </a>
+        </h6>
       </div>
-      <div class="card-body">
-        <p class="mb-3">
-          Gestisci la versione del programma per tenere traccia degli aggiornamenti e delle modifiche.
-        </p>
-
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <div class="card bg-light mb-3">
-              <div class="card-body text-center">
-                <h5 class="card-title">Versione attuale</h5>
-                <h2 class="mb-0 text-primary">{{ version }}</h2>
-              </div>
-            </div>
+      <div id="verCollapse" class="collapse show">
+        <div class="card-body pt-2">
+          <div class="border rounded p-2 text-center mb-3 bg-light">
+            <div class="small text-muted">Versione attuale</div>
+            <div class="fw-bold text-primary">{{ version }}</div>
           </div>
-
-          <div class="col-md-12">
-            <form action="{{ url_for('impostazioni.incrementa_versione') }}" method="POST">
-
-              <div class="mb-3">
-                <label for="changelog" class="form-label">Note aggiornamento (changelog)</label>
-                <textarea class="form-control" id="changelog" name="changelog" rows="4" placeholder="Scrivi qui le novità..."></textarea>
-              </div>
-
-              <div class="mb-3">
-                <label for="level" class="form-label">Tipo incremento</label>
-                <select class="form-select" id="level" name="level" required>
-                  <option value="patch">Patch (fix piccoli)</option>
-                  <option value="minor">Minor (aggiunte leggere)</option>
-                  <option value="major">Major (grandi cambiamenti)</option>
-                </select>
-              </div>
-
-              <button type="submit" class="btn btn-success">
-                <i class="fas fa-arrow-up me-1"></i> Salva nuova versione
-              </button>
-
-            </form>
-          </div>
+          <form action="{{ url_for('impostazioni.incrementa_versione') }}" method="POST">
+            <label class="form-label small mb-1">Changelog</label>
+            <textarea name="changelog" rows="3" class="form-control mb-2"></textarea>
+            <label class="form-label small mb-1">Tipo incremento</label>
+            <select name="level" class="form-select mb-3" required>
+              <option value="patch">Patch</option>
+              <option value="minor">Minor</option>
+              <option value="major">Major</option>
+            </select>
+            <button class="btn btn-success btn-sm"><i class="fas fa-arrow-up me-1"></i> Salva</button>
+          </form>
         </div>
-
-        {% if config and config.last_update %}
-        <div class="alert alert-info">
-          <i class="fas fa-info-circle me-2"></i>
-          Ultimo aggiornamento: {{ config.last_update }}
-        </div>
-        {% endif %}
       </div>
     </div>
   </div>
   {% endif %}
-{% if is_developer %}
-	<div class="mb-3">
-		<form action="{{ url_for('impostazioni.toggle_mode') }}" method="POST">
-			<button type="submit" class="btn btn-warning">
-				<i class="fas fa-exchange-alt me-1"></i> Passa a Produzione
-			</button>
-		</form>
-	</div>
-{% else %}
-<!-- Se serve, puoi anche mettere un messaggio per sviluppatore -->
-{% endif %}
 
-
-  <!-- SEZIONE: Backup Database -->
-  <div class="col-md-12 mb-4">
+  {# BLOCCO ORDINE CONDIZIONATO #}
+  {% macro backup_card(expanded) %}
+  <div class="col-12 col-lg-6 mb-4">
     <div class="card">
-      <div class="card-header">
-        <i class="fas fa-database me-1"></i>
-        Backup Database
+      <div class="card-header p-2">
+        <h6 class="mb-0">
+          <a class="text-decoration-none d-flex align-items-center" data-bs-toggle="collapse"
+             href="#backupCollapse" data-bs-parent="#accordionTools"
+             aria-expanded="{{ 'true' if expanded else 'false' }}" aria-controls="backupCollapse">
+            <i class="fas fa-database me-2"></i> Backup Database
+            <i class="fas fa-chevron-down ms-auto small"></i>
+          </a>
+        </h6>
       </div>
-      <div class="card-body">
-        <p class="mb-3">
-          Crea un backup del database per preservare i tuoi dati. Il sistema manterrà automaticamente gli ultimi 14 backup.
-        </p>
-
-        <form method="POST" action="{{ url_for('impostazioni.create_backup') }}" class="mb-4">
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save me-1"></i> Crea nuovo backup
-          </button>
-        </form>
-
-        <h5>Backup disponibili</h5>
-
-        {% if backups %}
-        <div class="table-responsive">
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th>Data e Ora</th>
-                <th>Nome File</th>
-                <th>Dimensione</th>
-                <th>Azioni</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for backup in backups %}
-              <tr>
-                <td>{{ backup.formatted_date }}</td>
-                <td>{{ backup.filename }}</td>
-                <td>{{ backup.size_mb }} MB</td>
-                <td>
-                  <div class="btn-group">
-                    <a href="{{ url_for('impostazioni.download_backup', filename=backup.filename) }}" class="btn btn-sm btn-success btn-icon" title="Scarica">
-                      <i class="fas fa-download"></i>
-                    </a>
-                    <button type="button" class="btn btn-sm btn-danger btn-icon" 
-                            onclick="confirmaEliminazioneBackup('{{ backup.filename }}', '{{ url_for('impostazioni.delete_backup', filename=backup.filename) }}')"
-                            title="Elimina">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+      <div id="backupCollapse" class="collapse {{ 'show' if expanded else '' }}">
+        <div class="card-body pt-2">
+          <form method="POST" action="{{ url_for('impostazioni.create_backup') }}" class="mb-3">
+            <button class="btn btn-primary btn-sm"><i class="fas fa-save me-1"></i> Crea backup</button>
+          </form>
+          {% if backups %}
+          <div class="table-responsive" style="max-height:300px;overflow:auto">
+            <table class="table table-sm table-hover">
+              <tbody>
+              {% for b in backups %}
+                <tr>
+                  <td class="small">{{ b.formatted_date }}</td>
+                  <td class="small">{{ b.filename }}</td>
+                  <td class="small">{{ b.size_mb }} MB</td>
+                  <td>
+                    <a class="btn btn-success btn-sm" href="{{ url_for('impostazioni.download_backup', filename=b.filename) }}"><i class="fas fa-download"></i></a>
+                  </td>
+                </tr>
               {% endfor %}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+            <div class="alert alert-info small">Nessun backup.</div>
+          {% endif %}
         </div>
-        {% else %}
-        <div class="alert alert-info">
-          <i class="fas fa-info-circle me-2"></i>
-          Non ci sono backup disponibili. Clicca su "Crea nuovo backup" per effettuare il primo backup.
-        </div>
-        {% endif %}
       </div>
     </div>
   </div>
+  {% endmacro %}
 
-  <!-- SEZIONE: Manutenzione Database -->
-  <div class="col-md-12 mb-4">
+  {% macro maint_card(expanded) %}
+  <div class="col-12 col-lg-6 mb-4">
     <div class="card">
-      <div class="card-header">
-        <i class="fas fa-wrench me-1"></i>
-        Manutenzione Database
+      <div class="card-header p-2">
+        <h6 class="mb-0">
+          <a class="text-decoration-none d-flex align-items-center" data-bs-toggle="collapse"
+             href="#maintCollapse" data-bs-parent="#accordionTools"
+             aria-expanded="{{ 'true' if expanded else 'false' }}" aria-controls="maintCollapse">
+            <i class="fas fa-wrench me-2"></i> Manutenzione Database
+            <i class="fas fa-chevron-down ms-auto small"></i>
+          </a>
+        </h6>
       </div>
-      <div class="card-body">
-        <p class="mb-3">
-          Strumenti per la manutenzione del database SQLite.
-        </p>
-
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card mb-3">
-              <div class="card-body">
-                <h5 class="card-title">Verifica Integrità</h5>
-                <p class="card-text">Controlla l'integrità del database per identificare eventuali problemi o corruzioni.</p>
-                <form method="POST" action="{{ url_for('impostazioni.check_db') }}">
-                  <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-check-circle me-1"></i> Verifica Integrità
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="card mb-3">
-              <div class="card-body">
-                <h5 class="card-title">Compattazione Database</h5>
-                <p class="card-text">Compatta il database per ridurne le dimensioni e migliorare le prestazioni.</p>
-                <form method="POST" action="{{ url_for('impostazioni.vacuum_db') }}">
-                  <button type="submit" class="btn btn-primary" onclick="return confirm('La compattazione potrebbe richiedere del tempo. Continuare?');">
-                    <i class="fas fa-compress-alt me-1"></i> Compatta Database
-                  </button>
-                </form>
-              </div>
-            </div>
+      <div id="maintCollapse" class="collapse {{ 'show' if expanded else '' }}">
+        <div class="card-body pt-2">
+          <div class="d-flex gap-2">
+            <form method="POST" action="{{ url_for('impostazioni.check_db') }}">
+              <button class="btn btn-primary btn-sm"><i class="fas fa-check-circle me-1"></i> Verifica</button>
+            </form>
+            <form method="POST" action="{{ url_for('impostazioni.vacuum_db') }}"
+                  onsubmit="return confirm('Compattare?');">
+              <button class="btn btn-primary btn-sm"><i class="fas fa-compress-alt me-1"></i> Compatta</button>
+            </form>
           </div>
         </div>
       </div>
     </div>
   </div>
+  {% endmacro %}
+
+  {% if is_developer %}
+    {{ maint_card(True) }}
+    {{ backup_card(False) }}
+  {% else %}
+    {{ backup_card(True) }}
+    {{ maint_card(False) }}
+  {% endif %}
+
+  {# TOGGLE BUTTON #}
+  <div class="col-12 mb-4 text-center">
+    {% if is_developer %}
+      <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#toggleModal">
+        <i class="fas fa-exchange-alt me-1"></i> Passa a Produzione
+      </button>
+    {% else %}
+      <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#toggleModal">
+        <i class="fas fa-exchange-alt me-1"></i> Torna a Sviluppo
+      </button>
+    {% endif %}
+  </div>
+
 </div>
 
-<!-- Modal di conferma eliminazione backup -->
-<div class="modal fade" id="deleteBackupModal" tabindex="-1" aria-labelledby="deleteBackupModalLabel" aria-hidden="true">
+{# MODAL PASSWORD #}
+<div class="modal fade" id="toggleModal" tabindex="-1">
   <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title" id="deleteBackupModalLabel">Conferma Eliminazione</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+    <form class="modal-content" method="POST" action="{{ url_for('impostazioni.toggle_mode') }}">
+      <div class="modal-header"><h5 class="modal-title">Conferma</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body">
-        <p>Sei sicuro di voler eliminare il backup <strong id="nomeBackup"></strong>?</p>
-        <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Questa operazione non può essere annullata!</p>
-      </div>
+        <p class="small">Password richiesta:</p>
+        <input type="password" name="pw" class="form-control" autofocus></div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-        <form id="deleteBackupForm" method="POST">
-          <button type="submit" class="btn btn-danger">Elimina</button>
-        </form>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+        <button class="btn btn-primary">Conferma</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-  function confirmaEliminazioneBackup(nome, url) {
-    document.getElementById('nomeBackup').textContent = nome;
-    document.getElementById('deleteBackupForm').action = url;
-    var deleteModal = new bootstrap.Modal(document.getElementById('deleteBackupModal'));
-    deleteModal.show();
-  }
-</script>
 {% endblock %}
