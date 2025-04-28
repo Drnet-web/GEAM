@@ -147,10 +147,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body">
         <p class="small">Password richiesta:</p>
-        <input type="password" name="pw" id="pwField" required class="form-control" autofocus></div>
+        <input type="password" name="pw" class="form-control" autofocus></div>
       <div class="modal-footer">
         <button class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
-        <button id="confirmBtn" class="btn btn-primary" disabled>Conferma</button>
+        <button class="btn btn-primary">Conferma</button>
       </div>
     </form>
   </div>
@@ -169,16 +169,4 @@ document.addEventListener('DOMContentLoaded',function(){
  toggle();
 });
 </script>
-
-<script>
-document.addEventListener('DOMContentLoaded',function(){
-  const pw=document.getElementById('pwField');
-  const ok=document.getElementById('confirmBtn');
-  if(!pw||!ok) return;
-  const toggle=()=>{ok.disabled=pw.value.trim()==='';};
-  pw.addEventListener('input',toggle);
-  toggle();
-});
-</script>
-
 {% endblock %}

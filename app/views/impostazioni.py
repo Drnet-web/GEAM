@@ -213,21 +213,44 @@ def incrementa_versione():
     return redirect(url_for('impostazioni.index'))
 
 
-@impostazioni_bp.route('/toggle-mode', methods=['POST'])
+from flask import current_app   # aggiungi in cima insieme agli altri import
+
+@impostazioni_bp.route("/toggle-mode", methods=["POST"])
 def toggle_mode():
-    """Alterna tra modalità sviluppatore e produzione"""
-    config_path = os.path.join(current_app.instance_path, 'config.json')
-    if os.path.exists(config_path):
+    pw = request.form.get("pw", "").strip()
+
+    # password obbligatoria
+    if pw != "emily":
+        flash("Password errata o mancante: operazione annullata", "danger")
+        return redirect(url_for("impostazioni.index"))
+
+    # percorso del file di configurazione
+    cfg_path = os.path.join(current_app.instance_path, "config.json")
+
+    # leggi la config attuale (se manca, usa default)
+    cfg = {}
+    if os.path.exists(cfg_path):
         try:
-            with open(config_path, 'r') as f:
-                config = json.load(f)
-            current_mode = config.get('developer_mode', False)
-            config['developer_mode'] = not current_mode
-            with open(config_path, 'w') as f:
-                json.dump(config, f, indent=4)
-            flash(f"Modalità aggiornata: {'Developer' if config['developer_mode'] else 'Produzione'}", "success")
+            with open(cfg_path, "r", encoding="utf-8") as f:
+                cfg = json.load(f)
         except Exception as e:
-            flash(f"Errore nel cambio modalità: {e}", "danger")
-    else:
-        flash("Config.json non trovato.", "danger")
-    return redirect(url_for('impostazioni.index'))
+            current_app.logger.error(f"Config.json corrotto? {e}")
+
+    # calcola la nuova modalità
+    current = cfg.get("developer_mode", False)
+    cfg["developer_mode"] = not current         # flip sviluppatore ⇄ produzione
+    current_app.config["DEVELOPER_MODE"] = cfg["developer_mode"]  # aggiorno anche l’in-memory (facoltativo)
+
+    # salva il file
+    try:
+        with open(cfg_path, "w", encoding="utf-8") as f:
+            json.dump(cfg, f, indent=2)
+    except Exception as e:
+        flash(f"Impossibile salvare la configurazione: {e}", "danger")
+        return redirect(url_for("impostazioni.index"))
+
+    flash(
+        "Modalità passata a PRODUZIONE" if current else "Modalità passata a SVILUPPO",
+        "success",
+    )
+    return redirect(url_for("impostazioni.index"))
