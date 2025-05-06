@@ -2,8 +2,8 @@
     "version": {
         "major": 2,
         "minor": 6,
-        "patch": 23
+        "patch": 24
     },
-    "changelog": "risolto bug psw",
-    "last_update": "2025-04-28 08:25:49"
+    "changelog": "aggiunta tipologia cliente su nuovo estintore tra parentesi e grassetto",
+    "last_update": "2025-05-06 09:16:22"
 }
