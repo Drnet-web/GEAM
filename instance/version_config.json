@@ -2,8 +2,8 @@
     "version": {
         "major": 2,
         "minor": 6,
-        "patch": 24
+        "patch": 25
     },
-    "changelog": "aggiunta tipologia cliente su nuovo estintore tra parentesi e grassetto",
-    "last_update": "2025-05-06 09:16:22"
+    "changelog": "Cambiato colore di input casella ricerca cliente dentro form \"Clienti\"",
+    "last_update": "2025-05-14 15:54:37"
 }

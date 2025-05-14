@@ -54,7 +54,7 @@
     <form method="GET" action="{{ url_for('clienti.index') }}" class="row g-3">
       <div class="col-md-6">
         <div class="input-group">
-          <input type="text" class="form-control" name="search" placeholder="Cerca per azienda, comune o zona..." value="{{ search }}">
+          <input type="text" class="form-control bg-primary" name="search" placeholder="Cerca per azienda, comune o zona..." value="{{ search }}">
           <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
           {% if search %}
           <a href="{{ url_for('clienti.index', tipologia=tipologia, sort_by=sort_by, order=order, solo_senza_estintori=('on' if solo_senza_estintori else '')) }}" class="btn btn-secondary">
