@@ -2,8 +2,8 @@
     "version": {
         "major": 2,
         "minor": 6,
-        "patch": 25
+        "patch": 26
     },
-    "changelog": "Cambiato colore di input casella ricerca cliente dentro form \"Clienti\"",
-    "last_update": "2025-05-14 15:54:37"
+    "changelog": "in stampe: su report \"Scadenze cliente personalizzato\" messo indirizzo sulla stessa riga del cliente per recuperare spazio",
+    "last_update": "2025-06-09 12:30:32"
 }

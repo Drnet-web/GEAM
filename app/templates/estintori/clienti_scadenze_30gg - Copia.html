@@ -26,6 +26,7 @@
             font-size: 14px;
             margin-top: 5px;
         }
+        /* Info container */
         .info-container {
             width: 100%;
             margin-bottom: 20px;
@@ -80,6 +81,7 @@
             margin-top: 30px;
             margin-bottom: 10px;
             border-radius: 5px;
+            /* Rimuoviamo il page-break-before per permettere il raggruppamento */
         }
         .cliente-header:first-of-type {
             page-break-before: avoid;
@@ -127,6 +129,7 @@
             page-break-after: always;
             height: 0;
         }
+        /* Stile per le note del cliente */
         .cliente-note {
             font-size: 12px;
             font-style: italic;
@@ -154,20 +157,26 @@
         {% else %}
             <p><strong>Periodo:</strong> Da {{ oggi.strftime('%d/%m/%Y') }} a {{ (oggi + timedelta(days=30)).strftime('%d/%m/%Y') }}</p>
         {% endif %}
-
+        
+        <!-- Nuova sezione per i filtri applicati -->
         <div class="filtri-applicati">
             <h4>Filtri applicati:</h4>
             <ul>
+                <!-- Tipo scadenza -->
                 <li><strong>Tipo scadenza:</strong> 
                     {% if tipo_scadenza == 'controllo' %}Controllo
                     {% elif tipo_scadenza == 'revisione' %}Revisione
                     {% elif tipo_scadenza == 'collaudo' %}Collaudo
                     {% else %}Tutte le scadenze{% endif %}
                 </li>
+                
+                <!-- Cliente filtrato -->
                 <li><strong>Cliente:</strong> 
                     {% if cliente_filtrato %}{{ cliente_filtrato.azienda }}
                     {% else %}Tutti i clienti{% endif %}
                 </li>
+                
+                <!-- Stato cliente (tipo_cliente) -->
                 <li><strong>Stato cliente:</strong> 
                     {% if tipo_cliente == 'Fisso' %}Fisso
                     {% elif tipo_cliente == 'Stagionale' %}Stagionale
@@ -175,6 +184,8 @@
                     {% elif tipo_cliente == 'Cessato' %}Cessato
                     {% else %}Tutti i tipi{% endif %}
                 </li>
+                
+                <!-- Zona -->
                 <li><strong>Zona:</strong> 
                     {% if zona and zona != 'tutte' %}{{ zona }}
                     {% else %}Tutte le zone{% endif %}
@@ -187,15 +198,13 @@
     {% set num_estintori = estintori_per_cliente[cliente.id]|length %}
     <div class="cliente-container {% if num_estintori <= 5 %}piccolo{% endif %}">
         <div class="cliente-header">
-            <h3 style="font-size: 16px; margin-bottom: 0;">
-                <b>{{ cliente.azienda }}</b>
-                <span style="font-size: 12px; font-weight: normal; color: #555; margin-left: 15px;">
-                    {{ cliente.indirizzo }}, {{ cliente.cap }} {{ cliente.comune }} ({{ cliente.provincia }})
-                    {% if cliente.telefono %} - Tel: {{ cliente.telefono }}{% endif %}
-                    {% if cliente.cellulare %} - Cell: {{ cliente.cellulare }}{% endif %}
-                    {% if cliente.email %} - Email: {{ cliente.email }}{% endif %}
-                </span>
-            </h3>
+            <h3>{{ cliente.azienda }}</h3>
+            <p>
+                {{ cliente.indirizzo }}, {{ cliente.cap }} {{ cliente.comune }} ({{ cliente.provincia }})
+                {% if cliente.telefono %} - Tel: {{ cliente.telefono }}{% endif %}
+                {% if cliente.cellulare %} - Cell: {{ cliente.cellulare }}{% endif %}
+                {% if cliente.email %} - Email: {{ cliente.email }}{% endif %}
+            </p>
             {% if cliente.note %}
             <p class="cliente-note">
                 <strong>Note:</strong> {{ cliente.note }}
@@ -245,6 +254,7 @@
                             </span>
                         </div>
                         {% endif %}
+                        
                         {% if estintore.scadenza_revisione %}
                         <div>
                             <span class="scadenza-tipo">Revisione:</span> 
@@ -258,6 +268,7 @@
                             </span>
                         </div>
                         {% endif %}
+                        
                         {% if estintore.scadenza_collaudo %}
                         <div>
                             <span class="scadenza-tipo">Collaudo:</span> 
