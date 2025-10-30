@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GEAM - Gestionale Estintori{% endblock %}</title>
+	<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+    <!-- Bootstrap 5 CSS -->
+    {{ bootstrap.load_css() }}
+    <!-- Font Awesome per le icone -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .sidebar {
+            min-height: calc(100vh - 56px);
+            background-color: #343a40;
+            color: white;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.75);
+            padding: 0.5rem 1rem;
+        }
+        .sidebar .nav-link:hover {
+            color: rgba(255, 255, 255, 1);
+        }
+        .sidebar .nav-link.active {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .version-badge {
+            font-size: 0.7em;
+            padding: 0.2em 0.5em;
+            margin-left: 5px;
+            position: relative;
+            top: -2px;
+        }
+        .author-credit {
+            font-size: 0.6em;
+            opacity: 0.7;
+            margin-left: 5px;
+            font-style: italic;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+        .btn-icon {
+            padding: 0.25rem 0.5rem;
+        }
+        .alert-float {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        /* Colori per le icone del menu */
+        .sidebar .nav-link i.fa-tachometer-alt {
+            color: #17a2b8; /* azzurro */
+        }
+        .sidebar .nav-link i.fa-building {
+            color: #28a745; /* verde */
+        }
+        .sidebar .nav-link i.fa-fire-extinguisher {
+            color: #dc3545; /* rosso */
+        }
+        .sidebar .nav-link i.fa-calendar-alt {
+            color: #ffc107; /* giallo */
+        }
+        .sidebar .nav-link i.fa-history {
+            color: #6f42c1; /* viola */
+        }
+        .sidebar .nav-link i.fa-print {
+            color: #fd7e14; /* arancione */
+        }
+        .sidebar .nav-link i.fa-chart-bar {
+            color: #20c997; /* teal */
+        }
+        .sidebar .nav-link i.fa-cog {
+            color: #6c757d; /* grigio */
+        }
+        /* Luminosità delle icone quando sono attive o hover */
+        .sidebar .nav-link:hover i, .sidebar .nav-link.active i {
+            filter: brightness(1.2);
+        }
+    </style>
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar principale -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <!-- Promemoria Backup -->
+            <div id="backup-reminder" class="alert alert-warning d-flex align-items-center py-0 me-2 mb-0 d-none" style="font-size: 0.8rem;">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span>Ricordati di fare il backup!</span>
+                <button type="button" class="btn-close ms-2" style="font-size: 0.6rem; opacity: 0.8;" aria-label="Close"></button>
+            </div>
+
+            <a class="navbar-brand" href="{{ url_for('dashboard.index') }}">
+                <i class="fas fa-fire-extinguisher me-2"></i>GEAM
+                <span class="badge bg-secondary version-badge">v{{ version }}</span>
+                <span class="author-credit">by Alberto Bertaggia</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" title="Impostazioni">
+                            <i class="fas fa-cog"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" title="Aiuto">
+                            <i class="fas fa-question-circle"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar (ridotta da col-md-2 a col-md-1.5) -->
+            <nav class="col-md-1-5 col-lg-1-5 d-md-block sidebar collapse" style="flex: 0 0 auto; width: 12.5%;">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'dashboard.index' %}active{% endif %}" href="{{ url_for('dashboard.index') }}" title="Dashboard">
+                                <i class="fas fa-tachometer-alt"></i> <span class="d-none d-lg-inline">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint and request.endpoint.startswith('clienti.') %}active{% endif %}" href="{{ url_for('clienti.index') }}" title="Clienti">
+                                <i class="fas fa-building"></i> <span class="d-none d-lg-inline">Clienti</span>
+                            </a>
+                        </li>
+						<li class="nav-item">
+							<a class="nav-link {% if request.endpoint and request.endpoint.startswith('fornitori.') %}active{% endif %}" href="{{ url_for('fornitori.index') }}" title="Fornitori">
+								<i class="fas fa-truck"></i> <span class="d-none d-lg-inline">Fornitori</span>
+							</a>
+						</li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint and request.endpoint.startswith('estintori.') %}active{% endif %}" href="{{ url_for('estintori.index') }}" title="Estintori">
+                                <i class="fas fa-fire-extinguisher"></i> <span class="d-none d-lg-inline">Estintori</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'estintori.scadenze' %}active{% endif %}" href="{{ url_for('estintori.scadenze') }}" title="Scadenze">
+                                <i class="fas fa-calendar-alt"></i> <span class="d-none d-lg-inline">Scadenze</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'estintori.logs' %}active{% endif %}" href="{{ url_for('estintori.logs') }}" title="Log">
+                                <i class="fas fa-history"></i> <span class="d-none d-lg-inline">Log</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'estintori.report' %}active{% endif %}" href="{{ url_for('estintori.report') }}" title="Stampe">
+                                <i class="fas fa-print"></i> <span class="d-none d-lg-inline">Stampe</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint and request.endpoint.startswith('report.') %}active{% endif %}" href="{{ url_for('report.index') }}" title="Report">
+                                <i class="fas fa-chart-bar"></i> <span class="d-none d-lg-inline">Report</span>
+                            </a>
+                        </li>
+						<li class="nav-item">
+							<a class="nav-link {% if request.endpoint and request.endpoint.startswith('timeline.') %}active{% endif %}" href="{{ url_for('timeline.index') }}" title="Timeline">
+								<i class="fas fa-stream"></i> <span class="d-none d-lg-inline">Timeline</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link {% if request.endpoint and request.endpoint.startswith('impostazioni.') %}active{% endif %}" href="{{ url_for('impostazioni.index') }}" title="Impostazioni">
+								<i class="fas fa-cog"></i> <span class="d-none d-lg-inline">Impostazioni</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link {% if request.endpoint and request.endpoint.startswith('aggiornamenti.') %}active{% endif %}" href="{{ url_for('aggiornamenti.index') }}" title="Aggiornamenti">
+								<i class="fas fa-wrench"></i> <span class="d-none d-lg-inline">Aggiornamenti</span>
+							</a>
+						</li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Contenuto principale (aumentato da col-md-10 a col-md-10.5) -->
+            <main class="ms-sm-auto px-md-4 content" style="flex: 0 0 auto; width: 87.5%;">
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show alert-float" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Titolo della pagina -->
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">{% block page_title %}Dashboard{% endblock %}</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        {% block page_actions %}{% endblock %}
+                    </div>
+                </div>
+
+                <!-- Contenuto -->
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    {{ bootstrap.load_js() }}
+    
+    <!-- Script per il promemoria di backup -->
+    <script>
+    // Funzione per gestire il promemoria di backup
+    function gestisciPromemoria() {
+        // Chiave per localStorage
+        const BACKUP_REMINDER_KEY = 'geam_last_backup_reminder';
+        
+        // Ottiene la data dell'ultimo promemoria mostrato
+        function getUltimoPromemoria() {
+            return localStorage.getItem(BACKUP_REMINDER_KEY);
+        }
+        
+        // Imposta la data dell'ultimo promemoria mostrato
+        function setUltimoPromemoria() {
+            localStorage.setItem(BACKUP_REMINDER_KEY, new Date().toISOString());
+        }
+        
+        // Controlla se è tempo di mostrare il promemoria
+        function deveVisualiazzarePromemoria() {
+            const ultimoPromemoria = getUltimoPromemoria();
+            
+            // Se non c'è un record precedente, mostra il promemoria
+            if (!ultimoPromemoria) {
+                return true;
+            }
+            
+            // Calcola giorni trascorsi dall'ultimo promemoria
+            const dataUltimoPromemoria = new Date(ultimoPromemoria);
+            const oggi = new Date();
+            const differenzaGiorni = Math.floor((oggi - dataUltimoPromemoria) / (1000 * 60 * 60 * 24));
+            
+            // Mostra il promemoria se sono passati almeno 2 giorni
+            return differenzaGiorni >= 2;
+        }
+        
+        // Elemento del promemoria
+        const promemoria = document.getElementById('backup-reminder');
+        
+        if (promemoria) {
+            // Controlla se deve mostrare il promemoria
+            if (deveVisualiazzarePromemoria()) {
+                // Mostra il promemoria
+                promemoria.classList.remove('d-none');
+                
+                // Registra che il promemoria è stato mostrato oggi
+                setUltimoPromemoria();
+                
+                // Nasconde il promemoria quando viene cliccato
+                const closeButton = promemoria.querySelector('.btn-close');
+                if (closeButton) {
+                    closeButton.addEventListener('click', function() {
+                        promemoria.classList.add('d-none');
+                    });
+                }
+            } else {
+                // Nascondi il promemoria
+                promemoria.classList.add('d-none');
+            }
+        }
+    }
+
+    // Esegui quando il DOM è caricato
+    document.addEventListener('DOMContentLoaded', gestisciPromemoria);
+    </script>
+    
+    <!-- Script per nascondere automaticamente i messaggi di alert -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let alerts = document.querySelectorAll('.alert-float');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    let bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

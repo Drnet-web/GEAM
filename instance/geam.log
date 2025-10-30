@@ -164,3 +164,72 @@ Estintori trovati nella query: 401
 Date di revisione uniche: 86
 Totale estintori visualizzati: 401
 Totale clienti filtrati: 76
+Parametri report: inizio=2025-06-09, fine=2025-07-09, tipo=controllo, cliente=, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.data_controllo IS NOT NULL AND estintori.data_controllo >= '2025-06-09' AND estintori.data_controllo <= '2025-07-09'
+Estintori trovati nella query: 401
+Date di revisione uniche: 86
+Totale estintori visualizzati: 401
+Totale clienti filtrati: 76
+Parametri report: inizio=2025-06-09, fine=2025-07-09, tipo=controllo, cliente=, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.data_controllo IS NOT NULL AND estintori.data_controllo >= '2025-06-09' AND estintori.data_controllo <= '2025-07-09'
+Estintori trovati nella query: 401
+Date di revisione uniche: 86
+Totale estintori visualizzati: 401
+Totale clienti filtrati: 76
+Parametri report: inizio=2025-06-09, fine=2025-07-09, tipo=controllo, cliente=, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.data_controllo IS NOT NULL AND estintori.data_controllo >= '2025-06-09' AND estintori.data_controllo <= '2025-07-09'
+Estintori trovati nella query: 401
+Date di revisione uniche: 86
+Totale estintori visualizzati: 401
+Totale clienti filtrati: 76
+Parametri report: inizio=2025-06-09, fine=2025-07-09, tipo=revisione, cliente=, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.data_revisione IS NOT NULL AND estintori.data_revisione >= '2025-06-09' AND estintori.data_revisione <= '2025-07-09'
+Estintori trovati nella query: 69
+Date di revisione uniche: 9
+Totale estintori visualizzati: 69
+Totale clienti filtrati: 37
+Parametri report: inizio=2025-06-09, fine=2025-07-09, tipo=tutto, cliente=, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.data_controllo IS NOT NULL AND estintori.data_controllo >= '2025-06-09' AND estintori.data_controllo <= '2025-07-09' OR estintori.data_revisione IS NOT NULL AND estintori.data_revisione >= '2025-06-09' AND estintori.data_revisione <= '2025-07-09' OR estintori.data_collaudo IS NOT NULL AND estintori.data_collaudo >= '2025-06-09' AND estintori.data_collaudo <= '2025-07-09'
+Estintori trovati nella query: 429
+Date di revisione uniche: 88
+Totale estintori visualizzati: 429
+Totale clienti filtrati: 90
+Parametri report: inizio=2025-06-09, fine=2025-07-09, tipo=tutto, cliente=, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.data_controllo IS NOT NULL AND estintori.data_controllo >= '2025-06-09' AND estintori.data_controllo <= '2025-07-09' OR estintori.data_revisione IS NOT NULL AND estintori.data_revisione >= '2025-06-09' AND estintori.data_revisione <= '2025-07-09' OR estintori.data_collaudo IS NOT NULL AND estintori.data_collaudo >= '2025-06-09' AND estintori.data_collaudo <= '2025-07-09'
+Estintori trovati nella query: 429
+Date di revisione uniche: 88
+Totale estintori visualizzati: 429
+Totale clienti filtrati: 90
+Parametri report: inizio=2025-06-09, fine=2025-07-09, tipo=controllo, cliente=505, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.cliente_id = '505' AND estintori.data_controllo IS NOT NULL AND estintori.data_controllo >= '2025-06-09' AND estintori.data_controllo <= '2025-07-09'
+Estintori trovati nella query: 0
+Parametri report: inizio=2025-06-09, fine=2025-07-09, tipo=controllo, cliente=, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.data_controllo IS NOT NULL AND estintori.data_controllo >= '2025-06-09' AND estintori.data_controllo <= '2025-07-09'
+Estintori trovati nella query: 401
+Date di revisione uniche: 86
+Totale estintori visualizzati: 401
+Totale clienti filtrati: 76
+Parametri report: inizio=2025-06-09, fine=2025-07-09, tipo=controllo, cliente=, tipo_cliente=tutti, zona=tutte
+Query SQL: SELECT estintori.id, estintori.cliente_id, estintori.tipologia, estintori.marca, estintori.matricola, estintori.dislocazione, estintori.postazione, estintori.suffisso_postazione, estintori.capacita, estintori.data_fabbricazione, estintori.data_installazione, estintori.data_controllo, estintori.data_revisione, estintori.data_collaudo, estintori.stato, estintori.coordinate, estintori.note, estintori.created_at, estintori.updated_at 
+FROM estintori JOIN clienti ON clienti.id = estintori.cliente_id 
+WHERE estintori.data_controllo IS NOT NULL AND estintori.data_controllo >= '2025-06-09' AND estintori.data_controllo <= '2025-07-09'
+Estintori trovati nella query: 401
+Date di revisione uniche: 86
+Totale estintori visualizzati: 401
+Totale clienti filtrati: 76
