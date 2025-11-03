@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: writehttps://github.com/Drnet-web/GEAM/blob/main/.github/workflows/build-zip.yml
+
 jobs:
   build-zip:
     runs-on: ubuntu-latest
