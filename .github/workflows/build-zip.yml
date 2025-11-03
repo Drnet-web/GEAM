@@ -6,7 +6,7 @@ on:
       - main
 
 permissions:
-  contents: writehttps://github.com/Drnet-web/GEAM/blob/main/.github/workflows/build-zip.yml
+  contents: write  # <-- NON aggiungere link o altro
 
 jobs:
   build-zip:
