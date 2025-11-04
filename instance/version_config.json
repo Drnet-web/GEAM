@@ -2,8 +2,8 @@
     "version": {
         "major": 2,
         "minor": 10,
-        "patch": 0
+        "patch": 1
     },
-    "changelog": "Update griglia estintori",
-    "last_update": "2025-11-03 10:01:23"
+    "changelog": "verde applicato a tutte le tabelle tramite custom.css",
+    "last_update": "2025-11-04 10:07:34"
 }
