@@ -1574,18 +1574,18 @@ def generate_lista_controllo(cliente_id, con_scadenze=False):
     from datetime import datetime, timedelta
     from flask import render_template, make_response, current_app
     from sqlalchemy import or_
-    
+
     # Verifica che sia specificato un cliente
     if not cliente_id:
         flash('È necessario selezionare un cliente per generare la lista di controllo', 'warning')
         return redirect(url_for('estintori.report'))
-    
+
     # Ottieni il cliente
     cliente = Cliente.query.get_or_404(cliente_id)
-    
+
     # Ottieni gli estintori del cliente
     query = Estintore.query.filter_by(cliente_id=cliente_id)
-    
+
     # Se richiesto, filtra solo per estintori in scadenza o in manutenzione
     if con_scadenze:
         oggi = datetime.now().date()
@@ -1598,27 +1598,19 @@ def generate_lista_controllo(cliente_id, con_scadenze=False):
                 Estintore.stato == 'In manutenzione'
             )
         )
-    
 
-    # Ordina per numero di postazione (default)
-    # Se richiesto, usa ordinamento speciale: prima postazioni senza suffisso, poi per suffisso e numero
-    if ordine == 'postazione_suffisso':
-        from sqlalchemy import case
-        has_suffix = case(((Estintore.suffisso_postazione == None) | (Estintore.suffisso_postazione == ''), 0), else_=1)
-        estintori = query.order_by(has_suffix, Estintore.suffisso_postazione, Estintore.postazione).all()
-    else:
-        estintori = query.order_by(Estintore.postazione).all()
+    # Ordina per numero di postazione (default) — nessuna logica extra qui
+    estintori = query.order_by(Estintore.postazione).all()
 
-    
     # Se non ci sono estintori, mostra un messaggio e reindirizza
     if not estintori:
         flash(f'Nessun estintore trovato per il cliente {cliente.azienda}', 'warning')
         return redirect(url_for('estintori.report'))
-    
+
     # Carica il logo come base64
     logo_path = os.path.join(current_app.root_path, 'static', 'img', 'Logo.png')
     logo_data_uri = None
-    
+
     if os.path.exists(logo_path):
         try:
             with open(logo_path, "rb") as image_file:
@@ -1626,7 +1618,7 @@ def generate_lista_controllo(cliente_id, con_scadenze=False):
                 logo_data_uri = f"data:image/png;base64,{logo_base64}"
         except Exception as e:
             current_app.logger.error(f"Errore nel caricamento del logo: {str(e)}")
-    
+
     # Crea un file HTML temporaneo per il footer con numerazione pagine
     footer_html = """<!DOCTYPE html>
 <html>
@@ -1645,15 +1637,9 @@ def generate_lista_controllo(cliente_id, con_scadenze=False):
             justify-content: space-between;
             width: 100%;
         }
-        .left {
-            text-align: left;
-        }
-        .center {
-            text-align: center;
-        }
-        .right {
-            text-align: right;
-        }
+        .left { text-align: left; }
+        .center { text-align: center; }
+        .right { text-align: right; }
     </style>
     <script>
         function subst() {
@@ -1685,16 +1671,16 @@ def generate_lista_controllo(cliente_id, con_scadenze=False):
     </div>
 </body>
 </html>"""
-    
+
     # Crea il file temporaneo per il footer
     footer_file = tempfile.NamedTemporaryFile(suffix='.html', delete=False)
     footer_file.write(footer_html.encode('utf-8'))
     footer_file.close()
-    
+
     # Renderizza il template HTML per il PDF - solo formato A4
     now = datetime.now()
     template_name = 'estintori/lista_controllo_a4.html'
-    
+
     try:
         rendered = render_template(
             template_name,
@@ -1707,7 +1693,7 @@ def generate_lista_controllo(cliente_id, con_scadenze=False):
         current_app.logger.error(f"Errore nel rendering del template: {str(e)}")
         flash(f'Errore nella generazione del PDF: {str(e)}', 'danger')
         return redirect(url_for('estintori.report'))
-    
+
     # Opzioni per pdfkit - sempre formato A4 orizzontale
     options = {
         'page-size': 'A4',
@@ -1716,34 +1702,30 @@ def generate_lista_controllo(cliente_id, con_scadenze=False):
         'footer-html': footer_file.name,
         'margin-top': '1cm',
         'margin-right': '1cm',
-        'margin-bottom': '2cm',  # Margine inferiore aumentato per il footer
+        'margin-bottom': '2cm',
         'margin-left': '1cm'
     }
-    
+
     try:
-        # Genera il PDF
         pdf = pdfkit.from_string(rendered, False, options=options)
-        
-        # Rimuovi il file temporaneo del footer
+
         os.unlink(footer_file.name)
-        
-        # Crea la risposta
+
         response = make_response(pdf)
         response.headers['Content-Type'] = 'application/pdf'
-        response.headers['Content-Disposition'] = f'inline; filename=lista_controllo_{cliente.azienda.replace(" ", "_")}_{now.strftime("%Y%m%d")}.pdf'
-        
+        response.headers['Content-Disposition'] = (
+            f'inline; filename=lista_controllo_{cliente.azienda.replace(" ", "_")}_{now.strftime("%Y%m%d")}.pdf'
+        )
         return response
-    
+
     except Exception as e:
-        # Rimuovi il file temporaneo del footer in caso di errore
         if os.path.exists(footer_file.name):
             os.unlink(footer_file.name)
-        
+
         current_app.logger.error(f"Errore nella generazione del PDF: {str(e)}")
         flash(f'Errore nella generazione del PDF: {str(e)}', 'danger')
         return redirect(url_for('estintori.report'))
-        
-        # Aggiungi questa funzione a estintori.py, nella sezione delle funzioni di report
+
 
 def generate_clienti_scadenze_report(periodo='prossimi30'):
     """
