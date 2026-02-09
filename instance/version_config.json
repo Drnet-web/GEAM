@@ -1,7 +1,9 @@
 {
     "version": {
         "major": 2,
-        "minor": 11,
+        "minor": 12,
         "patch": 0
-    }
+    },
+    "last_update": "2026-02-09 15:52:30",
+    "changelog": "PDF aggiunto"
 }
