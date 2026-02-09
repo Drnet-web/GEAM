@@ -879,7 +879,8 @@ def report():
         cliente_id = request.args.get('cliente_id')
         scadenze = request.args.get('scadenze') == 'on'
         formato = request.args.get('formato', 'pdf')
-        return generate_estintori_cliente_report(cliente_id, scadenze, formato)
+        ordine = request.args.get('ordine', '')
+        return generate_estintori_cliente_report(cliente_id, scadenze, formato, ordine=ordine)
     
     # Caso di default - mostra la pagina di selezione dei report
     return render_template('estintori/report.html', 
@@ -1139,7 +1140,7 @@ def duplica(id):
 
 
 # Aggiungi questa funzione che verrà chiamata dalla route report esistente
-def generate_estintori_cliente_report(cliente_id, solo_scadenze=False, formato='pdf'):
+def generate_estintori_cliente_report(cliente_id, solo_scadenze=False, formato='pdf', ordine=''):
     """Genera un report patrimoniale degli estintori di un cliente specifico"""
     # Verifica che sia specificato un cliente
     if not cliente_id:
@@ -1164,8 +1165,16 @@ def generate_estintori_cliente_report(cliente_id, solo_scadenze=False, formato='
             )
         )
     
-    # Ordina per numero di postazione
-    estintori = query.order_by(Estintore.postazione).all()
+
+    # Ordina per numero di postazione (default)
+    # Se richiesto, usa ordinamento speciale: prima postazioni senza suffisso, poi per suffisso e numero
+    if ordine == 'postazione_suffisso':
+        from sqlalchemy import case
+        has_suffix = case(((Estintore.suffisso_postazione == None) | (Estintore.suffisso_postazione == ''), 0), else_=1)
+        estintori = query.order_by(has_suffix, Estintore.suffisso_postazione, Estintore.postazione).all()
+    else:
+        estintori = query.order_by(Estintore.postazione).all()
+
     
     # Genera il report nel formato richiesto
     if formato == 'csv':
@@ -1590,8 +1599,16 @@ def generate_lista_controllo(cliente_id, con_scadenze=False):
             )
         )
     
-    # Ordina per numero di postazione
-    estintori = query.order_by(Estintore.postazione).all()
+
+    # Ordina per numero di postazione (default)
+    # Se richiesto, usa ordinamento speciale: prima postazioni senza suffisso, poi per suffisso e numero
+    if ordine == 'postazione_suffisso':
+        from sqlalchemy import case
+        has_suffix = case(((Estintore.suffisso_postazione == None) | (Estintore.suffisso_postazione == ''), 0), else_=1)
+        estintori = query.order_by(has_suffix, Estintore.suffisso_postazione, Estintore.postazione).all()
+    else:
+        estintori = query.order_by(Estintore.postazione).all()
+
     
     # Se non ci sono estintori, mostra un messaggio e reindirizza
     if not estintori:
