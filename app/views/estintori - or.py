@@ -1599,10 +1599,8 @@ def generate_lista_controllo(cliente_id, con_scadenze=False):
             )
         )
 
-    # Ordina come Report Patrimoniale: prima postazioni senza suffisso, poi per suffisso e numero
-    from sqlalchemy import case
-    has_suffix = case(((Estintore.suffisso_postazione == None) | (Estintore.suffisso_postazione == ''), 0), else_=1)
-    estintori = query.order_by(has_suffix, Estintore.suffisso_postazione, Estintore.postazione).all()
+    # Ordina per numero di postazione (default) — nessuna logica extra qui
+    estintori = query.order_by(Estintore.postazione).all()
 
     # Se non ci sono estintori, mostra un messaggio e reindirizza
     if not estintori:

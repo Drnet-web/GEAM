@@ -1,9 +1,9 @@
 {
     "version": {
         "major": 2,
-        "minor": 13,
+        "minor": 14,
         "patch": 0
     },
-    "last_update": "2026-02-09 21:08:32",
-    "changelog": "fix errore su stampa lista controllo"
+    "last_update": "2026-02-11 11:23:07",
+    "changelog": "nuovo ordine clienti su report lista controllo"
 }
